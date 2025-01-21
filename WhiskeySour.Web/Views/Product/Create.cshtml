@@ -1,18 +1,36 @@
-@model TModel
+@model WhiskeySour.Domain.Product
 
 @{
     Layout = null;
 }
 
-<!DOCTYPE html>
+<h2>Create Product</h2>
 
-<html>
-<head>
-    <title>title</title>
-</head>
-<body>
-<div>
-      
-</div>
-</body>
-</html>
+<form asp-action="Create" method="post">
+    <div>
+        <label for="Name">Name</label>
+        <input asp-for="Name" class="form-control"/>
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div>
+        <label for="Description">Description</label>
+        <input asp-for="Description" class="form-control"/>
+        <span asp-validation-for="Description"></span>
+    </div>
+    <div>
+        <label for="Price">Price</label>
+        <input asp-for="Price" class="form-control"/>
+        <span asp-validation-for="Price"></span>
+    </div>
+    <div>
+        <label for="Quantity">Quantity</label>
+        <input asp-for="Quantity" class="form-control"/>
+        <span asp-validation-for="Quantity"></span>
+    </div>
+    <div>
+        <label for="Category">Category</label>
+        <input asp-for="Category" class="form-control"/>
+        <span asp-validation-for="Category"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>
