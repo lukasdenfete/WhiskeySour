@@ -4,3 +4,4 @@ obj/
 *.suo
 *.log
 appsettings.json
+.DS_Store
