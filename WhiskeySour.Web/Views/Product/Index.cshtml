@@ -1,3 +1,4 @@
+@using WhiskeySour.Domain
 @model IEnumerable<WhiskeySour.Web.ViewModels.ProductViewModel>
 
 <table class="table">
@@ -18,6 +19,7 @@
             <td>@productViewModel.Product.Description</td>
             <td>@productViewModel.Product.Price</td>
             <td>@productViewModel.Product.Quantity</td>
+            <td>@productViewModel.Product.Category?.Name</td>
         </tr>
     }
     </tbody>

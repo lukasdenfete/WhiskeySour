@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 using WhiskeySour.Domain;
 using WhiskeySour.Infrastructure;
 using WhiskeySour.Web.ViewModels;
@@ -17,52 +18,43 @@ public class ProductController : Controller
 
     public IActionResult Index()
     {
-        var categories = _context.Categories.ToList();
+        //hämtar produkter och inkluderar kategorin
         var products = _context.Products
+            .Include(p => p.Category)
             .Select(p => new ProductViewModel
             {
-                Product = new Product
-                {
-                    ProductId = p.ProductId,
-                    Name = p.Name,
-                    Description = p.Description,
-                    Price = p.Price,
-                    Quantity = p.Quantity,
-                    CategoryId = p.CategoryId
-                },
-                Categories = categories
-            })
-            .ToList();
+                Product = p,
+                Categories = _context.Categories.ToList()
+            }).ToList();
+            
+            
         return View(products);
     }
 
     [HttpGet]
     public IActionResult Create()
     {
+        //hämtar kategorier från db och skickar till vyn via viewmodel
         var categories = _context.Categories.ToList();
         var pvm = new ProductViewModel
         {
             Categories = categories
         };
-        Console.WriteLine("Kategorier: " + categories.Count);
         return View(pvm);
     }
 
     [HttpPost]
     public IActionResult Create(ProductViewModel productViewModel)
     {
+        //om modelstate inte är valid visas formuläret igen med befintlig data
         if (!ModelState.IsValid)
         {
-            // Debug: Skriv ut alla ModelState-fel för att felsöka
-            foreach (var state in ModelState)
-            {
-                foreach (var error in state.Value.Errors)
-                {
-                    Console.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
-                }
-            }
+            var categories = _context.Categories.ToList();
+            productViewModel.Categories = categories;
+            return View(productViewModel);
         }
-
+        
+        //skapar produkt från viewmodeldata
         var product = new Product
         {
             Name = productViewModel.Product.Name,
@@ -76,5 +68,5 @@ public class ProductController : Controller
         _context.SaveChanges();
         return RedirectToAction("Index");
     }
-    }
+}
     
