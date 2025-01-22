@@ -15,10 +15,16 @@ public class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+        
+        modelBuilder.Entity<Product>()
+            .Property(p => p.Price)
+            .HasColumnType("decimal(18,2)"); // Detta säkerställer att EF använder rätt kolumntyp
+    
         modelBuilder.Entity<Category>()
             .HasMany(c => c.Products)
             .WithOne(p => p.Category)
-            .HasForeignKey(p => p.ProductId);
+            .HasForeignKey(p => p.CategoryId);
 
         // Många-till-många mellan Order och User (utan explicit join-klass)
         modelBuilder.Entity<Order>()

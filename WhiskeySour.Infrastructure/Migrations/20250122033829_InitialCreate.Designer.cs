@@ -12,7 +12,7 @@ using WhiskeySour.Infrastructure;
 namespace WhiskeySour.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250121041726_InitialCreate")]
+    [Migration("20250122033829_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -100,6 +100,12 @@ namespace WhiskeySour.Infrastructure.Migrations
             modelBuilder.Entity("WhiskeySour.Domain.Product", b =>
                 {
                     b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"));
+
+                    b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -117,6 +123,8 @@ namespace WhiskeySour.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("ProductId");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
@@ -192,7 +200,7 @@ namespace WhiskeySour.Infrastructure.Migrations
                 {
                     b.HasOne("WhiskeySour.Domain.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

@@ -1,4 +1,4 @@
-namespace WhiskeySour.Models;
+namespace WhiskeySour.Web.ViewModels;
 
 public class ErrorViewModel
 {

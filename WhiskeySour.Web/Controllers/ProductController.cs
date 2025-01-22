@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using WhiskeySour.Domain;
 using WhiskeySour.Infrastructure;
+using WhiskeySour.Web.ViewModels;
 
 namespace WhiskeySour.Controllers;
 
@@ -14,27 +15,66 @@ public class ProductController : Controller
         _context = dbContext;
     }
 
-    public async Task<IActionResult> Index()
+    public IActionResult Index()
     {
-        return View(await _context.Products.ToListAsync());
+        var categories = _context.Categories.ToList();
+        var products = _context.Products
+            .Select(p => new ProductViewModel
+            {
+                Product = new Product
+                {
+                    ProductId = p.ProductId,
+                    Name = p.Name,
+                    Description = p.Description,
+                    Price = p.Price,
+                    Quantity = p.Quantity,
+                    CategoryId = p.CategoryId
+                },
+                Categories = categories
+            })
+            .ToList();
+        return View(products);
     }
 
     [HttpGet]
     public IActionResult Create()
     {
-        return View();
+        var categories = _context.Categories.ToList();
+        var pvm = new ProductViewModel
+        {
+            Categories = categories
+        };
+        Console.WriteLine("Kategorier: " + categories.Count);
+        return View(pvm);
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(Product product)
+    public IActionResult Create(ProductViewModel productViewModel)
     {
-        if (ModelState.IsValid)
+        if (!ModelState.IsValid)
         {
-            _context.Products.Add(product);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+            // Debug: Skriv ut alla ModelState-fel för att felsöka
+            foreach (var state in ModelState)
+            {
+                foreach (var error in state.Value.Errors)
+                {
+                    Console.WriteLine($"Error in {state.Key}: {error.ErrorMessage}");
+                }
+            }
         }
-        return View(product);
+
+        var product = new Product
+        {
+            Name = productViewModel.Product.Name,
+            Description = productViewModel.Product.Description,
+            Price = productViewModel.Product.Price,
+            Quantity = productViewModel.Product.Quantity,
+            CategoryId = productViewModel.Product.CategoryId
+        };
+
+        _context.Products.Add(product);
+        _context.SaveChanges();
+        return RedirectToAction("Index");
+    }
     }
     
-}

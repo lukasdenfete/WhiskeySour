@@ -1,0 +1,24 @@
+@model IEnumerable<WhiskeySour.Web.ViewModels.ProductViewModel>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Category</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var productViewModel in Model)
+    {
+        <tr>
+            <td>@productViewModel.Product.Name</td>
+            <td>@productViewModel.Product.Description</td>
+            <td>@productViewModel.Product.Price</td>
+            <td>@productViewModel.Product.Quantity</td>
+        </tr>
+    }
+    </tbody>
+</table>
