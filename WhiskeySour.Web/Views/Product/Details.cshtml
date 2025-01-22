@@ -1,0 +1,20 @@
+@model WhiskeySour.Web.ViewModels.ProductViewModel
+
+
+<div class="container d-flex justify-content-center align-items-center mt-4">
+    <div class="text-center">
+        <h2>Product Details</h2>
+        <dl class="row justify-content-center">
+            <dd class="col-sm-9">@Model.Product.Name</dd>
+
+            <dd class="col-sm-9">@Model.Product.Description</dd>
+
+            <dd class="col-sm-9">@Model.Product.Price</dd>
+
+            <dd class="col-sm-9">@Model.Product.Quantity</dd>
+
+            <dd class="col-sm-9">@Model.Product.Category.Name</dd>
+        </dl>
+        <a class="btn btn-secondary" asp-controller="Product" asp-action="Index">Back to products</a>
+    </div>
+</div>

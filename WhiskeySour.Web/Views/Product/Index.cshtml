@@ -20,6 +20,11 @@
             <td>@productViewModel.Product.Price</td>
             <td>@productViewModel.Product.Quantity</td>
             <td>@productViewModel.Product.Category?.Name</td>
+            <td>
+                <a class="btn btn-primary btn-sm" asp-controller="Product" asp-action="Details" asp-route-id="@productViewModel.Product.ProductId">
+                    View Details
+                </a> 
+            </td>
         </tr>
     }
     </tbody>

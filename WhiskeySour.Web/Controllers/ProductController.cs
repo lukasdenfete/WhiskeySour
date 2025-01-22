@@ -68,5 +68,19 @@ public class ProductController : Controller
         _context.SaveChanges();
         return RedirectToAction("Index");
     }
+
+    [HttpGet]
+    public IActionResult Details(int id)
+    {
+        var product = _context.Products
+            .Include(p => p.Category)
+            .FirstOrDefault(p => p.ProductId == id);
+
+        var vm = new ProductViewModel
+        {
+            Product = product,
+        };
+        return View(vm);
+    }
 }
     
