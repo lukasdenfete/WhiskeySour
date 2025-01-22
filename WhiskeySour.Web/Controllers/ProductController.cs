@@ -70,6 +70,43 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    public IActionResult Edit(int id)
+    {
+        var product = _context.Products.
+            Include(p => p.Category).
+            FirstOrDefault(p => p.ProductId == id);
+        var vm = new ProductViewModel
+        {
+            Product = product,
+            Categories = _context.Categories.ToList()
+        };
+        return View(vm);
+
+    }
+
+    [HttpPost]
+    public IActionResult Edit(int id, ProductViewModel pvm)
+    {
+        if (!ModelState.IsValid)
+        {
+            pvm.Categories = _context.Categories.ToList();
+            return View(pvm);
+        }
+        // hämta nuvarande produkt från db
+        var currentProduct = _context.Products.FirstOrDefault(p => p.ProductId == id);
+        
+        //uppdatera produkten
+        currentProduct.Name = pvm.Product.Name;
+        currentProduct.Description = pvm.Product.Description;
+        currentProduct.Price = pvm.Product.Price;
+        currentProduct.Quantity = pvm.Product.Quantity;
+        currentProduct.CategoryId = pvm.Product.CategoryId;
+        
+        _context.SaveChanges();
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
     public IActionResult Details(int id)
     {
         var product = _context.Products
