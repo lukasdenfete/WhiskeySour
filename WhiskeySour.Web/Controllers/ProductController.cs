@@ -107,6 +107,28 @@ public class ProductController : Controller
     }
 
     [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        var product = _context.Products
+            .Include(p => p.Category)
+            .FirstOrDefault(p => p.ProductId == id);
+        var vm = new ProductViewModel
+        {
+            Product = product
+        };
+        return View(vm);
+    }
+
+    [HttpPost]
+    public IActionResult Delete(int id, ProductViewModel pvm)
+    {
+        var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+        _context.Products.Remove(product);
+        _context.SaveChanges();
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
     public IActionResult Details(int id)
     {
         var product = _context.Products
