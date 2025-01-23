@@ -103,7 +103,7 @@ public class ProductController : Controller
         currentProduct.CategoryId = pvm.Product.CategoryId;
         
         _context.SaveChanges();
-        return RedirectToAction("Index");
+        return RedirectToAction("Details", new { id = currentProduct.ProductId });
     }
 
     [HttpGet]
