@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -85,15 +86,36 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public IActionResult Edit(int id, ProductViewModel pvm)
+    public async Task<IActionResult> Edit(int id, ProductViewModel pvm, IFormFile imageFile)
     {
         if (!ModelState.IsValid)
         {
+            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
+            {
+                Console.WriteLine($"Error: {error.ErrorMessage}");
+            }
+
             pvm.Categories = _context.Categories.ToList();
             return View(pvm);
         }
         // hämta nuvarande produkt från db
-        var currentProduct = _context.Products.FirstOrDefault(p => p.ProductId == id);
+        var currentProduct = await _context.Products.FindAsync(id);
+        if (imageFile != null && imageFile.Length > 0)
+        {
+            Console.WriteLine($"File Name: {pvm.ImageFile.FileName}");
+            Console.WriteLine($"File Length: {pvm.ImageFile.Length}");
+            //spara bilden som en byte array
+            using (var memoryStream = new MemoryStream())
+            {
+                await imageFile.CopyToAsync(memoryStream);
+                currentProduct.Image = memoryStream.ToArray();
+            }
+             
+        }
+        else
+        {
+            Console.WriteLine("Ingen bild laddades upp!!!!!!!!!!");
+        }
         
         //uppdatera produkten
         currentProduct.Name = pvm.Product.Name;
@@ -102,7 +124,7 @@ public class ProductController : Controller
         currentProduct.Quantity = pvm.Product.Quantity;
         currentProduct.CategoryId = pvm.Product.CategoryId;
         
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         return RedirectToAction("Details", new { id = currentProduct.ProductId });
     }
 
@@ -140,6 +162,32 @@ public class ProductController : Controller
             Product = product,
         };
         return View(vm);
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> AddProductImage(int id)
+    {
+        var product = await _context.Products.FindAsync(id);
+        return View(product);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> AddProductImage(int id, IFormFile image)
+    {
+        var product = await _context.Products.FindAsync(id);
+        if (image != null && image.Length > 0)
+        {
+            using (var fileStream = image.OpenReadStream())
+            using (var ms = new MemoryStream())
+            {
+                fileStream.CopyTo(ms);
+                product.Image = ms.ToArray();
+            }
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction("Edit", new { id = product.ProductId });
     }
 }
     

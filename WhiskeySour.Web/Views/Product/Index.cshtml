@@ -7,8 +7,8 @@
         <th>Name</th>
         <th>Description</th>
         <th>Price</th>
-        <th>Quantity</th>
         <th>Category</th>
+        <th>In Stock</th>
     </tr>
     </thead>
     <tbody>
@@ -18,8 +18,16 @@
             <td>@productViewModel.Product.Name</td>
             <td>@productViewModel.Product.Description</td>
             <td>@productViewModel.Product.Price</td>
-            <td>@productViewModel.Product.Quantity</td>
             <td>@productViewModel.Product.Category?.Name</td>
+            <td>@if (productViewModel.Product.InStock)
+                {
+                    <span class="badge bg-success">Yes</span>
+                }
+                else
+                {
+                    <span class="badge bg-danger">No</span>
+                }
+            </td>
             <td>
                 <a class="btn btn-primary btn-sm" asp-controller="Product" asp-action="Details" asp-route-id="@productViewModel.Product.ProductId">
                     View Details
