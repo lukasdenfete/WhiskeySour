@@ -86,15 +86,10 @@ public class ProductController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(int id, ProductViewModel pvm, IFormFile imageFile)
+    public async Task<IActionResult> Edit(int id, ProductViewModel pvm, IFormFile? imageFile)
     {
         if (!ModelState.IsValid)
         {
-            foreach (var error in ModelState.Values.SelectMany(v => v.Errors))
-            {
-                Console.WriteLine($"Error: {error.ErrorMessage}");
-            }
-
             pvm.Categories = _context.Categories.ToList();
             return View(pvm);
         }
@@ -102,8 +97,6 @@ public class ProductController : Controller
         var currentProduct = await _context.Products.FindAsync(id);
         if (imageFile != null && imageFile.Length > 0)
         {
-            Console.WriteLine($"File Name: {pvm.ImageFile.FileName}");
-            Console.WriteLine($"File Length: {pvm.ImageFile.Length}");
             //spara bilden som en byte array
             using (var memoryStream = new MemoryStream())
             {
@@ -111,10 +104,6 @@ public class ProductController : Controller
                 currentProduct.Image = memoryStream.ToArray();
             }
              
-        }
-        else
-        {
-            Console.WriteLine("Ingen bild laddades upp!!!!!!!!!!");
         }
         
         //uppdatera produkten
