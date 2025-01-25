@@ -64,6 +64,14 @@ public class ProductController : Controller
             Quantity = productViewModel.Product.Quantity,
             CategoryId = productViewModel.Product.CategoryId
         };
+        if (productViewModel.ImageFile != null && productViewModel.ImageFile.Length > 0)
+        {
+            using (var memoryStream = new MemoryStream())
+            {
+                productViewModel.ImageFile.CopyTo(memoryStream);
+                product.Image = memoryStream.ToArray();
+            }
+        }
 
         _context.Products.Add(product);
         _context.SaveChanges();
