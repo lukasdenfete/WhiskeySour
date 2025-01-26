@@ -1,18 +1,17 @@
 @model WhiskeySour.Web.ViewModels.ProductViewModel
 
-
-<div class="mt-4 position-relative">
-    <div class="position-absolute" style="top: 10px; right: 10px;">
-        <a class="btn btn-secondary" asp-controller="Product" asp-action="Index">Back to products</a>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Product Details</h2>
+        <a class="btn btn-secondary" asp-controller="Product" asp-action="Index">Back to Products</a>
     </div>
-    <h2 class="text-center">Product Details</h2>
-    <div class="row d-flex align-items-center justify-content-center">
-        <div class="col-md-6 text-center">
+    <div class="row">
+        <div class="col-md-5 text-center">
             @if (Model.Product.Image != null && Model.Product.Image.Length > 0)
             {
                 <img src="data:image/png;base64,@Convert.ToBase64String(Model.Product.Image)"
                      alt="Image of @Model.Product.Name"
-                     class="img-fluid"
+                     class="img-fluid rounded shadow-sm"
                      style="max-height: 400px; border: 1px solid #ddd; padding: 10px"/>
             }
             else
@@ -20,20 +19,37 @@
                 <p>No image available for this product</p>
             }
         </div>
-        <div class="col-md-6">
+        <div class="col-md-7">
+            <h3 class="text-secondary">@Model.Product.Name</h3>
+            <p class="text-muted">@Model.Product.Description</p>
+            <hr/>
             <dl class="row">
-                <dd class="col-sm-9">@Model.Product.Name</dd>
-
-                <dd class="col-sm-9">@Model.Product.Description</dd>
-
-                <dd class="col-sm-9">@Model.Product.Price</dd>
-
-                <dd class="col-sm-9">@Model.Product.Quantity</dd>
-
-                <dd class="col-sm-9">@Model.Product.Category.Name</dd>
+                <dt class="col-sm-4">Price:</dt>
+                <dd class="col-sm-8"><strong>@Model.Product.Price $</strong></dd>
+                
+                <dt class="col-sm-4">Stock</dt>
+                <dd class="col-sm-8">
+                    @if (Model.Product.Quantity > 3)
+                    {
+                        <span class="badge bg-success">In Stock</span>
+                        <span>(@Model.Product.Quantity left)</span>
+                    } else if (Model.Product.Quantity == 0)
+                    {
+                        <span class="badge bg-danger">Out of Stock</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-warning">Few Left</span>
+                        <span>(@Model.Product.Quantity left)</span>
+                    }
+                </dd>
+                
+                <dt class="col-sm-4">Category:</dt>
+                <dd class="col-sm-8">@Model.Product.Category.Name</dd>
             </dl>
-            <div class="mt-3">
-                <a class="btn btn-danger" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.ProductId">Edit</a>
+            <div class="mt-4">
+                <a class="btn btn-primary" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.ProductId">Edit Product</a>
+                
             </div>
         </div>
     </div>
