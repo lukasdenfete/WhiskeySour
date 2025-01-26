@@ -1,41 +1,50 @@
 @using WhiskeySour.Domain
 @model IEnumerable<WhiskeySour.Web.ViewModels.ProductViewModel>
+<h1 class="d-flex justify-content-center">Products</h1>
+<div class="d-flex justify-content-end mb-3">
+    <a class="btn btn-secondary" asp-controller="Product" asp-action="Create">Add product</a>
+</div>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Price</th>
-        <th>Category</th>
-        <th>In Stock</th>
-    </tr>
-    </thead>
-    <tbody>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     @foreach (var productViewModel in Model)
     {
-        <tr>
-            <td>@productViewModel.Product.Name</td>
-            <td>@productViewModel.Product.Description</td>
-            <td>@productViewModel.Product.Price</td>
-            <td>@productViewModel.Product.Category?.Name</td>
-            <td>@if (productViewModel.Product.InStock)
+        <div class="col">
+            <div class="card h-100">
+                @if (productViewModel.Product.Image != null)
                 {
-                    <span class="badge bg-success">Yes</span>
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(productViewModel.Product.Image)" 
+                         class="card-img-top" alt="@productViewModel.Product.Name"/>
                 }
                 else
                 {
-                    <span class="badge bg-danger">No</span>
+                    <img src="~/images/placeholder.jpg" class="card-img-top" alt="No image available"/>
                 }
-            </td>
-            <td>
-                <a class="btn btn-primary btn-sm" asp-controller="Product" asp-action="Details" asp-route-id="@productViewModel.Product.ProductId">
-                    View Details
-                </a> 
-            </td>
-        </tr>
+                <div class="card-body border-0">
+                    <h5 class="card-title">@productViewModel.Product.Name</h5>
+                    <p class="card-text">@productViewModel.Product.Description</p>
+                    <p class="card-text"><strong>@productViewModel.Product.Price $</strong></p>
+                    <p class="card-text">
+                        @if (productViewModel.Product.Quantity >= 3)
+                        {
+                            <span class="badge bg-success">In Stock</span>
+                        }
+                        else if (productViewModel.Product.Quantity < 3 && productViewModel.Product.Quantity > 0)
+                        {
+                            <span class="badge bg-warning">Few Left</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Out of Stock</span>
+                        }
+                    </p>
+                </div>
+                <div class="card-footer text-center border-0">
+                    <a class="btn btn-primary btn-sm" asp-controller="Product" asp-action="Details" asp-route-id="@productViewModel.Product.ProductId">
+                        View Details
+                    </a>
+                </div>
+            </div>
+        </div>
     }
-    </tbody>
-</table>
+</div>
 
-<a class="btn btn-secondary" asp-controller="Product" asp-action="Create">Add product</a>
