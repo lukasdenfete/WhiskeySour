@@ -154,9 +154,14 @@ public class ProductController : Controller
             .Include(p => p.Category)
             .FirstOrDefault(p => p.ProductId == id);
 
+        var relatedProducts = _context.Products
+            .Where(p => p.CategoryId == product.CategoryId && p.ProductId != product.ProductId)
+            .ToList();
+
         var vm = new ProductViewModel
         {
             Product = product,
+            ProductsNavigation = relatedProducts
         };
         return View(vm);
     }

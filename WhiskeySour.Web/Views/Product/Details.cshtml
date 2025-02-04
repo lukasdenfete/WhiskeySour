@@ -1,4 +1,6 @@
+@using WhiskeySour.Web.ViewModels
 @model WhiskeySour.Web.ViewModels.ProductViewModel
+
 
 <div class="container mt-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -52,6 +54,30 @@
                 
             </div>
         </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h5>Related Products</h5>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    @foreach (var relatedProduct in Model.ProductsNavigation)
+    {
+        <div class="col">
+            <div class="card h-100">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@relatedProduct.ProductId" class="text-decoration-none text-reset">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(relatedProduct.Image)"
+                         alt="@relatedProduct.Name"
+                         class="card-img-top"
+                         style="height: 150px; object-fit: cover"/>
+                    <div class="card-body">
+                        <h6 class="card-title">@relatedProduct.Name</h6>
+                        <p class="card-text">@relatedProduct.Price $</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    }
     </div>
 </div>
 
