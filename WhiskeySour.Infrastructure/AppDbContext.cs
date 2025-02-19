@@ -1,8 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using WhiskeySour.Domain;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace WhiskeySour.Infrastructure;
 
-public class AppDbContext : DbContext 
+public class AppDbContext : IdentityDbContext<IdentityUser> 
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -26,7 +28,7 @@ public class AppDbContext : DbContext
             .WithOne(p => p.Category)
             .HasForeignKey(p => p.CategoryId);
 
-        // Många-till-många mellan Order och User (utan explicit join-klass)
+        // Många-till-många mellan Order och User
         modelBuilder.Entity<Order>()
             .HasMany(o => o.UsersNavigation)
             .WithMany(u => u.OrdersNavigation)
@@ -35,7 +37,7 @@ public class AppDbContext : DbContext
                 j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
                 j => j.HasOne<Order>().WithMany().HasForeignKey("OrderId")
             );
-        // Många-till-många mellan Order och Product (utan explicit join-klass)
+        // Många-till-många mellan Order och Product
         modelBuilder.Entity<Order>()
             .HasMany(o => o.ProductsNavigation)
             .WithMany(p => p.OrdersNavigation)
