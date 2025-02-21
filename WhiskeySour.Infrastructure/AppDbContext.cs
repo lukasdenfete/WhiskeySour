@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
 using WhiskeySour.Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace WhiskeySour.Infrastructure;
 
-public class AppDbContext : DbContext 
+public class AppDbContext : IdentityDbContext 
 {
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }

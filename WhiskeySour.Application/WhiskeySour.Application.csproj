@@ -10,4 +10,8 @@
       <ProjectReference Include="..\WhiskeySour.Domain\WhiskeySour.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.2" />
+    </ItemGroup>
+
 </Project>
