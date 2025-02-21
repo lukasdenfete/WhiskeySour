@@ -27,7 +27,7 @@ public class AppDbContext : IdentityDbContext
             .WithOne(p => p.Category)
             .HasForeignKey(p => p.CategoryId);
 
-        // Många-till-många mellan Order och User (utan explicit join-klass)
+        // Många-till-många mellan Order och User
         modelBuilder.Entity<Order>()
             .HasMany(o => o.UsersNavigation)
             .WithMany(u => u.OrdersNavigation)
@@ -36,7 +36,7 @@ public class AppDbContext : IdentityDbContext
                 j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
                 j => j.HasOne<Order>().WithMany().HasForeignKey("OrderId")
             );
-        // Många-till-många mellan Order och Product (utan explicit join-klass)
+        // Många-till-många mellan Order och Product
         modelBuilder.Entity<Order>()
             .HasMany(o => o.ProductsNavigation)
             .WithMany(p => p.OrdersNavigation)
