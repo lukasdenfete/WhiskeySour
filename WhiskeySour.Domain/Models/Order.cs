@@ -1,3 +1,6 @@
+
+using Microsoft.AspNetCore.Identity;
+
 namespace WhiskeySour.Domain;
 
 public class Order
@@ -7,6 +10,6 @@ public class Order
     public int UserId { get; set; }
     public int ProductId { get; set; }
     public int Quantity { get; set; }
-    public ICollection<User> UsersNavigation { get; set; }
+    public ICollection<IdentityUser> UsersNavigation { get; set; }
     public ICollection<Product> ProductsNavigation { get; set; }
 }

@@ -1,11 +1,11 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using WhiskeySour.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace WhiskeySour.Infrastructure;
 
-public class AppDbContext : IdentityDbContext 
+public class AppDbContext : IdentityDbContext<IdentityUser>
 {
-    public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }
@@ -30,10 +30,10 @@ public class AppDbContext : IdentityDbContext
         // Många-till-många mellan Order och User
         modelBuilder.Entity<Order>()
             .HasMany(o => o.UsersNavigation)
-            .WithMany(u => u.OrdersNavigation)
+            .WithMany() 
             .UsingEntity<Dictionary<string, object>>(
                 "UserOrders", // Namnet på den mellanliggande tabellen
-                j => j.HasOne<User>().WithMany().HasForeignKey("UserId"),
+                j => j.HasOne<IdentityUser>().WithMany().HasForeignKey("Id"),
                 j => j.HasOne<Order>().WithMany().HasForeignKey("OrderId")
             );
         // Många-till-många mellan Order och Product
@@ -46,5 +46,6 @@ public class AppDbContext : IdentityDbContext
                 j => j.HasOne<Order>().WithMany().HasForeignKey("OrderId")
             );
     }
+    
     
 }
