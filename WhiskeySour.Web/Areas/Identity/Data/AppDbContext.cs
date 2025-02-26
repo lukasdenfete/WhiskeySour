@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-
+/*
 namespace WhiskeySour.Infrastructure;
 
 public class AppDbContext : IdentityDbContext<IdentityUser>
@@ -19,3 +19,4 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
         // Add your customizations after calling base.OnModelCreating(builder);
     }
 }
+*/
