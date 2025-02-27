@@ -4,7 +4,7 @@ using WhiskeySour.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 namespace WhiskeySour.Infrastructure;
 
-public class AppDbContext : IdentityDbContext<IdentityUser>
+public class AppDbContext : IdentityDbContext<User>
 {
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
@@ -30,11 +30,18 @@ public class AppDbContext : IdentityDbContext<IdentityUser>
         // Många-till-många mellan Order och User
         modelBuilder.Entity<Order>()
             .HasMany(o => o.UsersNavigation)
-            .WithMany() 
+            .WithMany(u => u.OrdersNavigation) 
             .UsingEntity<Dictionary<string, object>>(
-                "UserOrders", // Namnet på den mellanliggande tabellen
-                j => j.HasOne<IdentityUser>().WithMany().HasForeignKey("Id"),
-                j => j.HasOne<Order>().WithMany().HasForeignKey("OrderId")
+                "UserOrders", //Namnet på sambandstabellen
+                j => j.HasOne<User>()
+                    .WithMany()
+                    .HasForeignKey("UserId") // UserId är en FK i den sambandstabellen
+                    .HasPrincipalKey(u => u.Id), // Id är PK i User-tabellen
+
+                j => j.HasOne<Order>()
+                    .WithMany()
+                    .HasForeignKey("OrderId") // OrderId är en FK i den sambandstabellen
+                    .HasPrincipalKey(o => o.OrderId) // Id är PK i Order-tabellen
             );
         // Många-till-många mellan Order och Product
         modelBuilder.Entity<Order>()
