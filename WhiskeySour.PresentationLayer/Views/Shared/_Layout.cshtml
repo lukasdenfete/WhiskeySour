@@ -41,9 +41,19 @@
                     </div>
                 </form>
                 @* Right side of header *@
-                <div>
-                    <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
-                </div>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div>
+                        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Login">Login</a>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <a class="btn btn-primary" asp-area="Identity" asp-page="/Account/Profile">Profile</a>
+                    </div>
+                }
+                
             </div>
         </div>
     </nav>
