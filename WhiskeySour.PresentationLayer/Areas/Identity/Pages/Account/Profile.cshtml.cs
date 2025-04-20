@@ -15,6 +15,7 @@ public class ProfileModel : PageModel
     public string Email { get; set; }
     public string FirstName { get; set; }
     public string LastName { get; set; }
+    public byte[] ProfilePicture { get; set; }
 
     public async Task OnGetAsync()
     {
@@ -22,6 +23,7 @@ public class ProfileModel : PageModel
         Email = user.UserName;
         FirstName = user.FirstName;
         LastName = user.LastName;
+        ProfilePicture = user.ProfilePicture;
     }
     
 

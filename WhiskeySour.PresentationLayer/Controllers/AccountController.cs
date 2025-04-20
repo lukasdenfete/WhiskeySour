@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WhiskeySour.Areas.Identity.Pages.Account;
@@ -40,5 +41,29 @@ public class AccountController : Controller
     {
         await _signInManager.SignOutAsync();
         return RedirectToAction("Index", "Home");
+    }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> AddProfilePicture()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        return View(User);
+    }
+
+    [Authorize]
+    [HttpPost]
+    public async Task<IActionResult> AddProfilePicture(IFormFile image)
+    {
+        var user  = await _userManager.GetUserAsync(User);
+        if (image != null && image.Length > 0)
+        {
+            using var ms = new MemoryStream();
+            await image.CopyToAsync(ms);
+            user.ProfilePicture = ms.ToArray();
+            await _userManager.UpdateAsync(user);
+        }
+
+        return RedirectToAction("Profile", "Account");
     }
 }
