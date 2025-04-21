@@ -22,7 +22,7 @@ public class SearchController : Controller
             .AsQueryable();
         if (!string.IsNullOrWhiteSpace(searchString))
         {
-            products = products.Where(p => p.Name.Contains(searchString) || p.Category.Name.Contains(searchString));
+            products = products.Where(p => p.Name.Contains(searchString));
         }
 
         if (selectedCategoryId.HasValue)
