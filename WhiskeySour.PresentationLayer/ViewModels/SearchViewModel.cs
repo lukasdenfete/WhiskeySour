@@ -6,5 +6,7 @@ public class SearchViewModel
 {
     public string Query { get; set; }
     public List<Product> Products { get; set; }
+    public int? SelectedCategoryId { get; set; }
+    public List<Category> Categories { get; set; }
     
 }

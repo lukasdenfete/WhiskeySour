@@ -14,17 +14,27 @@ public class SearchController : Controller
         _context = context;
     }
 
-    public IActionResult Search(string searchString)
+    public IActionResult Search(string searchString, int? selectedCategoryId)
     {
+        var categories = _context.Categories.ToList();
+        var products = _context.Products
+            .Include(p => p.Category)
+            .AsQueryable();
+        if (!string.IsNullOrWhiteSpace(searchString))
+        {
+            products = products.Where(p => p.Name.Contains(searchString) || p.Category.Name.Contains(searchString));
+        }
+
+        if (selectedCategoryId.HasValue)
+        {
+            products = products.Where(p => p.CategoryId == selectedCategoryId.Value);
+        }
         var vm = new SearchViewModel
         {
             Query = searchString,
-            Products = string.IsNullOrWhiteSpace(searchString)
-                ? new List<Product>()
-                : _context.Products
-                    .Include(p => p.Category)
-                    .Where(p => p.Name.Contains(searchString) || p.Category.Name.Contains(searchString))
-                    .ToList()
+            SelectedCategoryId = selectedCategoryId,
+            Categories = categories,
+            Products = products.ToList()
         };
         return View("Search", vm);
     }

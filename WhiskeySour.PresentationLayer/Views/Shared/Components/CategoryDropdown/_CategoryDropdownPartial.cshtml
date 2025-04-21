@@ -1,0 +1,9 @@
+@model IEnumerable<WhiskeySour.DataLayer.Category>
+
+<select name="selectedCategoryId" class="form-select">
+    <option value="">All categories</option>
+    @foreach (var category in Model)
+    {
+        <option value="@category.CategoryId">@category.Name</option>
+    }
+</select>
