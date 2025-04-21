@@ -1,10 +1,12 @@
 @using WhiskeySour.DataLayer;
 @model IEnumerable<WhiskeySour.Web.ViewModels.ProductViewModel>
 <h1 class="d-flex justify-content-center">Products</h1>
-<div class="d-flex justify-content-end mb-3">
-    <a class="btn btn-secondary" asp-controller="Product" asp-action="Create">Add product</a>
-</div>
-
+@if (User.IsInRole("Admin"))
+{
+    <div class="d-flex justify-content-end mb-3">
+        <a class="btn btn-secondary" asp-controller="Product" asp-action="Create">Add product</a>
+    </div>
+}
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     @foreach (var productViewModel in Model)
     {

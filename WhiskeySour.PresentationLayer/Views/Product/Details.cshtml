@@ -49,10 +49,12 @@
                 <dt class="col-sm-4">Category:</dt>
                 <dd class="col-sm-8">@Model.Product.Category.Name</dd>
             </dl>
-            <div class="mt-4">
-                <a class="btn btn-primary" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.ProductId">Edit Product</a>
-                
-            </div>
+            @if (User.IsInRole("Admin"))
+            {
+                <div class="mt-4">
+                    <a class="btn btn-primary" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.ProductId">Edit Product</a>
+                </div>
+            }
         </div>
     </div>
 </div>
