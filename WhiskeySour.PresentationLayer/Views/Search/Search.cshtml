@@ -1,7 +1,22 @@
-@* @model TModel
+@model WhiskeySour.Web.ViewModels.SearchViewModel
 
-@{
-    Layout = null;
+<h2>Search results for "@Model.Query"</h2>
+
+@if (!Model.Products.Any())
+{
+    <p>No results matched the search query.</p>
 }
-
-*@
+else
+{
+    <ul>
+        @foreach (var product in Model.Products)
+        {
+            <li>
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId">
+                <strong>@product.Name</strong>
+                </a>
+                - @product.Category.Name
+            </li>
+        }
+    </ul>
+}

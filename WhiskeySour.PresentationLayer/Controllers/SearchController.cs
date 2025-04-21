@@ -14,7 +14,7 @@ public class SearchController : Controller
         _context = context;
     }
 
-    /*public IActionResult Search(string searchString)
+    public IActionResult Search(string searchString)
     {
         var vm = new SearchViewModel
         {
@@ -22,10 +22,11 @@ public class SearchController : Controller
             Products = string.IsNullOrWhiteSpace(searchString)
                 ? new List<Product>()
                 : _context.Products
+                    .Include(p => p.Category)
                     .Where(p => p.Name.Contains(searchString) || p.Category.Name.Contains(searchString))
                     .ToList()
         };
         return View("Search", vm);
-    }*/
+    }
     
 }
