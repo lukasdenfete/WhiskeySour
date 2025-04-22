@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using WhiskeySour.DataLayer;
@@ -28,6 +29,7 @@ public class ProfileController : Controller
         return View(vm);
     }
 
+    [Authorize(Roles = "User, Admin")]
     [HttpGet]
     public async Task<IActionResult> Edit()
     {
@@ -42,6 +44,7 @@ public class ProfileController : Controller
         return View(vm);
     }
 
+    [Authorize(Roles = "User, Admin")]
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(ProfileViewModel vm)

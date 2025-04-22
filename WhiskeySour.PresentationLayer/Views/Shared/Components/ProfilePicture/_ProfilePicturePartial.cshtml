@@ -1,0 +1,14 @@
+@model WhiskeySour.Web.ViewModels.ProfileViewModel
+
+
+@if (Model.ProfilePicture != null && Model.ProfilePicture.Length > 0)
+{
+    var base64 = Convert.ToBase64String(Model.ProfilePicture);
+    <img src="data:image/png;base64,@base64" alt="Profile Picture" 
+         class="rounded-circle" style="height: 40px; width: 40px; object-fit: cover;" />
+}
+else
+{
+    <img src="images/default-profilbild.png" alt="Default Profile Picture" class="rounded-circle"
+         style="height: 40px; width: 40px; object-fit: cover;" />
+}

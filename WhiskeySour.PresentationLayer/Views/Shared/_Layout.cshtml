@@ -51,7 +51,9 @@
                 else
                 {
                     <div class="d-flex gap-2">
-                        <a class="btn btn-primary" asp-controller="Profile" asp-action="Index">Profile</a>
+                        <a asp-controller="Profile" asp-action="Index">
+                            @await Component.InvokeAsync("ProfilePicture")
+                        </a>
                         <form asp-controller="Account" asp-action="Logout" method="post">
                             <button type="submit" class="btn btn-danger">Logout</button>
                         </form>

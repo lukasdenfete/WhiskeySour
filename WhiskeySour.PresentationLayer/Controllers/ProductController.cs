@@ -31,8 +31,8 @@ public class ProductController : Controller
         return View(products);
     }
 
-    [HttpGet]
     [Authorize(Roles = "Admin")]
+    [HttpGet]
     public IActionResult Create()
     {
         //hämtar kategorier från db och skickar till vyn via viewmodel
@@ -44,8 +44,8 @@ public class ProductController : Controller
         return View(pvm);
     }
 
-    [HttpPost]
     [Authorize(Roles = "Admin")]
+    [HttpPost]
     public IActionResult Create(ProductViewModel productViewModel)
     {
         //om modelstate inte är valid visas formuläret igen med befintlig data
@@ -79,8 +79,8 @@ public class ProductController : Controller
         return RedirectToAction("Index");
     }
 
-    [HttpGet]
     [Authorize(Roles = "Admin")]
+    [HttpGet]
     public IActionResult Edit(int id)
     {
         var product = _context.Products.
@@ -95,8 +95,8 @@ public class ProductController : Controller
 
     }
 
-    [HttpPost]
     [Authorize(Roles = "Admin")]
+    [HttpPost]
     public async Task<IActionResult> Edit(int id, ProductViewModel pvm, IFormFile? imageFile)
     {
         if (!ModelState.IsValid)
@@ -128,8 +128,8 @@ public class ProductController : Controller
         return RedirectToAction("Details", new { id = currentProduct.ProductId });
     }
 
-    [HttpGet]
     [Authorize(Roles = "Admin")]
+    [HttpGet]
     public IActionResult Delete(int id)
     {
         var product = _context.Products
@@ -142,8 +142,8 @@ public class ProductController : Controller
         return View(vm);
     }
 
-    [HttpPost]
     [Authorize(Roles = "Admin")]
+    [HttpPost]
     public IActionResult Delete(int id, ProductViewModel pvm)
     {
         var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
@@ -171,16 +171,16 @@ public class ProductController : Controller
         return View(vm);
     }
     
-    [HttpGet]
     [Authorize(Roles = "Admin")]
+    [HttpGet]
     public async Task<IActionResult> AddProductImage(int id)
     {
         var product = await _context.Products.FindAsync(id);
         return View(product);
     }
 
-    [HttpPost]
     [Authorize(Roles = "Admin")]
+    [HttpPost]
     public async Task<IActionResult> AddProductImage(int id, IFormFile image)
     {
         var product = await _context.Products.FindAsync(id);
