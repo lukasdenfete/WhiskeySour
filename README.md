@@ -10,7 +10,7 @@ Product catalog management
 
 Search function for users, and products by name and category (in progress)
 
-User authentication with ASP.NET Identity (in progress)
+User authentication with ASP.NET Identity
 
 Community section with chat forum and private messaging (planned)
 
