@@ -36,7 +36,7 @@
                 @* Search bar *@
                 <form asp-controller="Search" asp-action="Search" method="get" class="d-flex mx-auto">
                     <div class="input-group">
-                        <input name="searchString" type="search" class="form-control" placeholder="Search products"/>
+                        <input name="searchString" type="search" class="form-control" placeholder="Search..."/>
                         @await Component.InvokeAsync("CategoryDropdown")
                         <button type="submit" class="btn btn-primary">Search</button>
                     </div>
