@@ -9,6 +9,8 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Product> Products { get; set; }
     public DbSet<Category> Categories { get; set; }
     public DbSet<Order> Orders { get; set; }
+    public DbSet<Thread> Threads { get; set; }
+    public DbSet<Comment> Comments { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -52,6 +54,17 @@ public class AppDbContext : IdentityDbContext<User>
                 j => j.HasOne<Product>().WithMany().HasForeignKey("ProductId"),
                 j => j.HasOne<Order>().WithMany().HasForeignKey("OrderId")
             );
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.Thread)
+            .WithMany(t => t.Comments)
+            .HasForeignKey(c => c.ThreadId)
+            .OnDelete(DeleteBehavior.Cascade); 
+
+        modelBuilder.Entity<Comment>()
+            .HasOne(c => c.CreatedBy)
+            .WithMany()
+            .HasForeignKey(c => c.CreatedById)
+            .OnDelete(DeleteBehavior.Restrict);
     }
     
     
