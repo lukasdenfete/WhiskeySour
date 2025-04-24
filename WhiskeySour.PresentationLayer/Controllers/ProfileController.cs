@@ -86,6 +86,7 @@ public class ProfileController : Controller
         {
             FirstName = user.FirstName,
             LastName = user.LastName,
+            Email = user.UserName,
             ProfilePicture = user.ProfilePicture
         };
         return View(pvm);

@@ -18,7 +18,7 @@
                         {
                             <div class="col">
                                 <a asp-controller="Product" asp-action="Details" asp-route-id="@product.ProductId" class="text-decoration-none text-reset">
-                                    <div class="card h-50 border">
+                                    <div class="card h-100 border">
                                         @if (product.Image != null)
                                         {
                                             <img src="data:image/jpeg;base64,@Convert.ToBase64String(product.Image)" class="card-img-top" alt="@product.Name"/>
@@ -43,7 +43,7 @@
                     @foreach (var user in Model.Users)
                     {
                         <a asp-controller="Profile" asp-action="Details" asp-route-id="@user.Id" class="text-decoration-none text-reset">
-                        <div class="card-mb-3 border">
+                        <div class="card-mb-3 mt-3 border">
                             <div class="row g-0 align-items-center">
                                 <div class="col-4">
                                     @if (user.ProfilePicture != null)

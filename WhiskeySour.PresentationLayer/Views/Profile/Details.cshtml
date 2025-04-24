@@ -1,7 +1,7 @@
 @model WhiskeySour.Web.ViewModels.ProfileViewModel
 
 @{
-    Layout = null;
+    ViewData["Title"] = @Model.FirstName + " " + @Model.LastName;
 }
 <div class="d-flex justify-content-center">
     @if (Model.ProfilePicture != null)
