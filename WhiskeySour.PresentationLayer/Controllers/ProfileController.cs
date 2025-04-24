@@ -71,4 +71,24 @@ public class ProfileController : Controller
         }
         return View(vm);
     }
+
+    [Authorize]
+    [HttpGet]
+    public async Task<IActionResult> Details(string id)
+    {
+        var currentUser = await _userManager.GetUserAsync(User);
+        var user = await _userManager.FindByIdAsync(id);
+        if (id == currentUser.Id)
+        {
+            return RedirectToAction("Index", "Profile");
+        }
+        var pvm = new ProfileViewModel
+        {
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Email = user.UserName,
+            ProfilePicture = user.ProfilePicture
+        };
+        return View(pvm);
+    }
 }

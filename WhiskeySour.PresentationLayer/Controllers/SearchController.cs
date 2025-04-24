@@ -14,27 +14,45 @@ public class SearchController : Controller
         _context = context;
     }
 
-    public IActionResult Search(string searchString, int? selectedCategoryId)
+    public async Task<IActionResult> Search(string searchString, int? selectedCategoryId)
     {
-        var categories = _context.Categories.ToList();
-        var products = _context.Products
+        var categories = await _context.Categories.ToListAsync();
+        var productsQuery = _context.Products
             .Include(p => p.Category)
             .AsQueryable();
         if (!string.IsNullOrWhiteSpace(searchString))
         {
-            products = products.Where(p => p.Name.Contains(searchString));
+            productsQuery = productsQuery.Where(p => p.Name.Contains(searchString));
         }
 
         if (selectedCategoryId.HasValue)
         {
-            products = products.Where(p => p.CategoryId == selectedCategoryId.Value);
+            productsQuery = productsQuery.Where(p => p.CategoryId == selectedCategoryId.Value);
         }
+        var products = await productsQuery.ToListAsync();
+        var users = new List<User>();
+        if (!string.IsNullOrWhiteSpace(searchString))
+        {
+            users = await _context.Users
+                .Where(u => u.FirstName.Contains(searchString) || u.LastName.Contains(searchString))
+                .ToListAsync();
+        }
+
+        var userViewModels = users.Select(u => new ProfileViewModel
+        {
+            Id = u.Id,
+            FirstName = u.FirstName,
+            LastName = u.LastName,
+            ProfilePicture = u.ProfilePicture
+        }).ToList();
+            
         var vm = new SearchViewModel
         {
             Query = searchString,
             SelectedCategoryId = selectedCategoryId,
             Categories = categories,
-            Products = products.ToList()
+            Products = products,
+            Users = userViewModels
         };
         return View("Search", vm);
     }
