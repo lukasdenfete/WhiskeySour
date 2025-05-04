@@ -1,7 +1,28 @@
-@model TModel
-
+@model List<WhiskeySour.Web.ViewModels.ForumViewModel>
 @{
     ViewData["Title"] = "Forum";
 }
+<div class="d-flex justify-content-center">
+    <h2>Welcome to the WhiskeySour chat forum!</h2>
+</div>
 
+<div class="d-flex justify-content-center">
+@if (Model.Any() && Model != null)
+{
+    @foreach (var thread in Model)
+    {
+        <div>
+            <a asp-controller="Forum" asp-action="Details" asp-route-id="@thread.ThreadId">@thread.ThreadTitle</a>
+        </div>
+    }
+}
+else
+{
+    <div>
+        <p>There are no threads in the forum right now, be the first to write something!</p>
+        <a class="btn btn-primary" asp-controller="Forum" asp-action="Create">Create thread</a>
+    </div>
+    }
+
+</div>
 

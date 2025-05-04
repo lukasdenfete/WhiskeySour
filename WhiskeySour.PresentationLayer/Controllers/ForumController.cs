@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WhiskeySour.DataLayer;
+using WhiskeySour.Web.ViewModels;
 
 namespace WhiskeySour.Controllers;
 
@@ -19,12 +20,22 @@ public class ForumController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var threads = _context.Threads
+        var threads = await _context.Threads
             .Include(t => t.CreatedBy)
             .OrderByDescending(t => t.Created)
             .ToListAsync();
-        
-        return View(threads);
+
+        var fvm = threads.Select(t => new ForumViewModel
+        {
+            ThreadId = t.Id,
+            ThreadTitle = t.Title,
+            ThreadContent = t.Content,
+            Created = t.Created,
+            CreatedByName = t.CreatedBy.FirstName + " " + t.CreatedBy.LastName,
+            Comments = new List<CommentViewModel>() // tom för Index
+        }).ToList();
+
+        return View(fvm); 
     }
 
     public IActionResult Create()
@@ -34,25 +45,28 @@ public class ForumController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    [Authorize(Roles = "User")]
-    public async Task<IActionResult> Create(string title, string content)
+    [Authorize(Roles = "User, Admin")]
+    public async Task<IActionResult> Create(CreateThreadViewModel model)
     {
-        if (string.IsNullOrWhiteSpace(title) || string.IsNullOrWhiteSpace(content))
+        if (ModelState.IsValid)
         {
-            ModelState.AddModelError("", "Both title and content are required.");
-            return View();
+            var user = await _userManager.GetUserAsync(User);
+            var thread = new DataLayer.Thread
+            {
+                Title = model.ThreadTitle,
+                Content = model.ThreadContent,
+                Created = DateTime.Now,
+                CreatedById = user.Id,
+            };
+
+            _context.Threads.Add(thread);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Index");
         }
-        var user = await _userManager.GetUserAsync(User);
-        var thread = new DataLayer.Thread
-        {
-            Title = title,
-            Content = content,
-            Created = DateTime.Now,
-            CreatedById = user.Id,
-        };
-        _context.Threads.Add(thread);
-        await _context.SaveChangesAsync();
-        return RedirectToAction("Index");
+
+        return View(model);
+
     }
 
     public async Task<IActionResult> Details(int id)
@@ -67,7 +81,22 @@ public class ForumController : Controller
         {
             return NotFound();
         }
-        return View(thread);
+
+        var fvm = new ForumViewModel
+        {
+            ThreadId = thread.Id,
+            ThreadTitle = thread.Title,
+            ThreadContent = thread.Content,
+            CreatedByName = thread.CreatedBy.FirstName + " " + thread.CreatedBy.LastName,
+            Created = thread.Created,
+            Comments = thread.Comments.Select(c => new CommentViewModel
+            {
+                Content = c.Content,
+                CreatedByName = c.CreatedBy.FirstName + " " + c.CreatedBy.LastName,
+                Created = c.Created
+            }).ToList()
+        };
+        return View(fvm);
     }
     
     
