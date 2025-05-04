@@ -64,9 +64,7 @@ public class ForumController : Controller
 
             return RedirectToAction("Index");
         }
-
         return View(model);
-
     }
 
     public async Task<IActionResult> Details(int id)

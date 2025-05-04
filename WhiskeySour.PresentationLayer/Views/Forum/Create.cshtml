@@ -3,12 +3,12 @@
 
 <form asp-controller="Forum" asp-action="Create" method="post">
     <div class="form-group">
-        <label asp-for="ThreadTitle"></label>
+        <label asp-for="ThreadTitle">Title</label>
         <input asp-for="ThreadTitle" class="form-control"/>
         <span asp-validation-for="ThreadTitle" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label asp-for="ThreadContent"></label>
+        <label asp-for="ThreadContent">Content</label>
         <textarea asp-for="ThreadContent" class="form-control" rows="5"></textarea>
         <span asp-validation-for="ThreadContent" class="text-danger"></span>
     </div>
