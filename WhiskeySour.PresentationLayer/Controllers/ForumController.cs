@@ -40,7 +40,8 @@ public class ForumController : Controller
 
     public IActionResult Create()
     {
-        return View();
+        var model = new CreateThreadViewModel();
+        return View(model);
     }
 
     [HttpPost]

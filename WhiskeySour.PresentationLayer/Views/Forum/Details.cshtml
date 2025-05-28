@@ -1,5 +1,10 @@
 @model WhiskeySour.Web.ViewModels.ForumViewModel
 
+<div class="d-flex justify-content-end mb-3">
+    <a asp-controller="Forum" asp-action="Index" class="btn btn-dark">
+        Back to forum
+    </a>
+</div>
 <h2>@Model.ThreadTitle</h2>
 <p><strong>Created by:</strong> @Model.CreatedByName</p>
 <p><strong>Date:</strong> @Model.Created.ToString("yyyy-MM-dd HH:mm")</p>
