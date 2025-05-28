@@ -12,4 +12,5 @@ public class ForumViewModel
     public string CreatedByName { get; set; }
     public DateTime Created { get; set; }
     public List<CommentViewModel> Comments { get; set; }
+    public CreateCommentViewModel NewComment { get; set; }
 }

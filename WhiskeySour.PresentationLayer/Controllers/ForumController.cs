@@ -92,9 +92,35 @@ public class ForumController : Controller
                 Content = c.Content,
                 CreatedByName = c.CreatedBy.FirstName + " " + c.CreatedBy.LastName,
                 Created = c.Created
-            }).ToList()
+            }).ToList(),
+            NewComment = new CreateCommentViewModel
+            {
+                ThreadId = thread.Id,
+            }
         };
         return View(fvm);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize]
+    public async Task<IActionResult> AddComment(CreateCommentViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("Details", new { id = model.ThreadId });
+        }
+        var user = await _userManager.GetUserAsync(User);
+        var comment = new Comment
+        {
+            ThreadId = model.ThreadId,
+            Content = model.Content,
+            Created = DateTime.Now,
+            CreatedById = user.Id
+        };
+        _context.Comments.Add(comment);
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Details", new { id = model.ThreadId });
     }
     
     
