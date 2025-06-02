@@ -12,4 +12,5 @@ public class Comment
     public Thread Thread { get; set; }
     public string CreatedById { get; set; }
     public User CreatedBy { get; set; }
+    public byte[]? Image { get; set; }
 }

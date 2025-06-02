@@ -13,5 +13,6 @@ public class Thread
     public string CreatedById { get; set; }
     public User CreatedBy { get; set; }
     public ICollection<Comment> Comments { get; set; }
+    public byte[]? Image { get; set; }
     
 }

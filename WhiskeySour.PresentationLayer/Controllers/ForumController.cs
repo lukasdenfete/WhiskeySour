@@ -47,7 +47,7 @@ public class ForumController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize(Roles = "User, Admin")]
-    public async Task<IActionResult> Create(CreateThreadViewModel model)
+    public async Task<IActionResult> Create(CreateThreadViewModel model) //skapa tråd
     {
         if (ModelState.IsValid)
         {
@@ -59,6 +59,12 @@ public class ForumController : Controller
                 Created = DateTime.Now,
                 CreatedById = user.Id,
             };
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                using var ms = new MemoryStream();
+                await model.ImageFile.CopyToAsync(ms);
+                thread.Image = ms.ToArray();
+            }
 
             _context.Threads.Add(thread);
             await _context.SaveChangesAsync();
@@ -88,11 +94,13 @@ public class ForumController : Controller
             ThreadContent = thread.Content,
             CreatedByName = thread.CreatedBy.FirstName + " " + thread.CreatedBy.LastName,
             Created = thread.Created,
+            ThreadImage = thread.Image,
             Comments = thread.Comments.Select(c => new CommentViewModel
             {
                 Content = c.Content,
                 CreatedByName = c.CreatedBy.FirstName + " " + c.CreatedBy.LastName,
-                Created = c.Created
+                Created = c.Created,
+                Image = c.Image
             }).ToList(),
             NewComment = new CreateCommentViewModel
             {
@@ -101,6 +109,9 @@ public class ForumController : Controller
         };
         return View(fvm);
     }
+    
+    [HttpPost]
+    
 
     [HttpPost]
     [ValidateAntiForgeryToken]
@@ -119,6 +130,12 @@ public class ForumController : Controller
             Created = DateTime.Now,
             CreatedById = user.Id
         };
+        if (model.ImageFile != null && model.ImageFile.Length > 0)
+        {
+            using var ms = new MemoryStream();
+            await model.ImageFile.CopyToAsync(ms);
+            comment.Image = ms.ToArray();
+        }
         _context.Comments.Add(comment);
         await _context.SaveChangesAsync();
         return RedirectToAction("Details", new { id = model.ThreadId });

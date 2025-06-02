@@ -13,4 +13,5 @@ public class ForumViewModel
     public DateTime Created { get; set; }
     public List<CommentViewModel> Comments { get; set; }
     public CreateCommentViewModel NewComment { get; set; }
+    public byte[]? ThreadImage { get; set; } // Visning av trådbild
 }

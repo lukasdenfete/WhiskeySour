@@ -9,4 +9,5 @@ public class CreateThreadViewModel
 
     [Required(ErrorMessage = "Thread content is required")]
     public string ThreadContent { get; set; }
+    public IFormFile ImageFile { get; set; }
 }

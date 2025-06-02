@@ -10,7 +10,12 @@
 <p><strong>Date:</strong> @Model.Created.ToString("yyyy-MM-dd HH:mm")</p>
 <p>@Model.ThreadContent</p>
 
-<h4>Comments</h4>
+@if (Model.ThreadImage != null)
+{
+    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ThreadImage)" class="img-fluid mb-3" style="max-height: 400px;" />
+}
+
+<h6>Comments</h6>
 @if (Model.Comments != null && Model.Comments.Any())
 {
     <ul class="list-group mb-4">
@@ -18,6 +23,10 @@
         {
             <li class="list-group-item">
                 <p>@comment.Content</p>
+                @if (comment.Image != null)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(comment.Image)" class="img-fluid mb-2" style="max-height: 300px;" />
+                }
                 <small class="text-muted">
                     By @comment.CreatedByName on @comment.Created.ToString("yyyy-MM-dd HH:mm")
                 </small>
@@ -30,12 +39,16 @@ else
     <p class="text-muted">Be the first to comment in this thread</p>
 }
 
-<form asp-action="AddComment" method="post">
+<form asp-action="AddComment" method="post" enctype="multipart/form-data">
     <input type="hidden" name="ThreadId" value="@Model.ThreadId"/>
     <div class="form-group">
         <label for="Content">Add comment:</label>
         <textarea name="Content" class="form-control" rows="3"></textarea>
         <span asp-validation-for="NewComment.Content" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label for="ImageFile">Upload picture</label>
+        <input type="file" name="ImageFile" class="form-control"/>
     </div>
     <button type="submit" class="btn btn-dark mt-2">Post Comment </button>
 </form>
