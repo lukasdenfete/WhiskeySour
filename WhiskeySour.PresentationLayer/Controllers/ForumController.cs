@@ -32,7 +32,7 @@ public class ForumController : Controller
             ThreadContent = t.Content,
             Created = t.Created,
             CreatedByName = t.CreatedBy.FirstName + " " + t.CreatedBy.LastName,
-            Comments = new List<CommentViewModel>() // tom för Index
+            CommentCount = _context.Comments.Count(c => c.ThreadId == t.Id)
         }).ToList();
 
         return View(fvm); 
@@ -94,6 +94,7 @@ public class ForumController : Controller
             ThreadContent = thread.Content,
             CreatedById = thread.CreatedBy.Id,
             CreatedByName = thread.CreatedBy.FirstName + " " + thread.CreatedBy.LastName,
+            CommentCount = thread.Comments.Count,
             Created = thread.Created,
             ThreadImage = thread.Image,
             Comments = thread.Comments.Select(c => new CommentViewModel

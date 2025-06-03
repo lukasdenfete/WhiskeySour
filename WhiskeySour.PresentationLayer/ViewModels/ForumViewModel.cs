@@ -11,6 +11,7 @@ public class ForumViewModel
     public string ThreadContent { get; set; }
     public string CreatedById { get; set; }
     public string CreatedByName { get; set; }
+    public int CommentCount { get; set; }
     public DateTime Created { get; set; }
     public List<CommentViewModel> Comments { get; set; }
     public CreateCommentViewModel NewComment { get; set; }
