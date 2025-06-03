@@ -99,6 +99,8 @@ public class ForumController : Controller
             {
                 Content = c.Content,
                 CreatedByName = c.CreatedBy.FirstName + " " + c.CreatedBy.LastName,
+                CreatedById = c.CreatedBy.Id,
+                CommentId = c.Id,
                 Created = c.Created,
                 Image = c.Image
             }).ToList(),
@@ -109,9 +111,56 @@ public class ForumController : Controller
         };
         return View(fvm);
     }
-    
+
     [HttpPost]
-    
+    public async Task<IActionResult> DeleteThread(int id)
+    {
+        var thread = await _context.Threads
+            .Include(t => t.CreatedBy)
+            .FirstOrDefaultAsync(t => t.Id == id);
+        if (thread == null)
+        {
+            return NotFound();
+        }
+        var user = await _userManager.GetUserAsync(User);
+        var isAdmin = User.IsInRole("Admin");
+        if (thread.CreatedById == user.Id || isAdmin)
+        {
+            _context.Threads.Remove(thread);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+        else
+        {
+            return Forbid();
+        }
+        
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteComment(int id)
+    {
+        var comment = await _context.Comments
+            .Include(c => c.CreatedBy)
+            .FirstOrDefaultAsync(c => c.Id == id);
+        if (comment == null)
+        {
+            return NotFound();
+        }
+        var user = await _userManager.GetUserAsync(User);
+        var isAdmin = User.IsInRole("Admin");
+        if (comment.CreatedById == user.Id || isAdmin)
+        {
+            _context.Comments.Remove(comment);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Details", new { id = comment.ThreadId });
+        }
+        else
+        {
+            return Forbid();
+        }
+        
+    }
 
     [HttpPost]
     [ValidateAntiForgeryToken]

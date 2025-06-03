@@ -6,6 +6,8 @@ public class CommentViewModel
 {
     [Required]
     public string Content { get; set; }
+    public int CommentId { get; set; }
+    public string CreatedById { get; set; }
     public string CreatedByName { get; set; }
     public DateTime Created { get; set; }
     public byte[]? Image { get; set; }
