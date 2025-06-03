@@ -9,6 +9,7 @@ public class ForumViewModel
     public string ThreadTitle { get; set; }
     [Required(ErrorMessage = "Content is required")]
     public string ThreadContent { get; set; }
+    public string CreatedById { get; set; }
     public string CreatedByName { get; set; }
     public DateTime Created { get; set; }
     public List<CommentViewModel> Comments { get; set; }

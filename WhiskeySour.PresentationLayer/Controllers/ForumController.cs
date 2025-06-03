@@ -92,6 +92,7 @@ public class ForumController : Controller
             ThreadId = thread.Id,
             ThreadTitle = thread.Title,
             ThreadContent = thread.Content,
+            CreatedById = thread.CreatedBy.Id,
             CreatedByName = thread.CreatedBy.FirstName + " " + thread.CreatedBy.LastName,
             Created = thread.Created,
             ThreadImage = thread.Image,
