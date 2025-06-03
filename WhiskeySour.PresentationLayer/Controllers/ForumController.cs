@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using WhiskeySour.DataLayer;
 using WhiskeySour.Web.ViewModels;
 
@@ -36,6 +37,33 @@ public class ForumController : Controller
         }).ToList();
 
         return View(fvm); 
+    }
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    [Authorize]
+    public async Task<IActionResult> AddComment(CreateCommentViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return RedirectToAction("Details", new { id = model.ThreadId });
+        }
+        var user = await _userManager.GetUserAsync(User);
+        var comment = new Comment
+        {
+            ThreadId = model.ThreadId,
+            Content = model.Content,
+            Created = DateTime.Now,
+            CreatedById = user.Id
+        };
+        if (model.ImageFile != null && model.ImageFile.Length > 0)
+        {
+            using var ms = new MemoryStream();
+            await model.ImageFile.CopyToAsync(ms);
+            comment.Image = ms.ToArray();
+        }
+        _context.Comments.Add(comment);
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Details", new { id = model.ThreadId });
     }
 
     public IActionResult Create()
@@ -164,33 +192,62 @@ public class ForumController : Controller
         
     }
 
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> Edit(int id)
+    {
+        var thread = await _context.Threads
+            .FirstOrDefaultAsync(t => t.Id == id);
+        if (thread == null)
+        {
+            return NotFound();
+        }
+        var user = await _userManager.GetUserAsync(User);
+        var isAdmin = User.IsInRole("Admin");
+        if (thread.CreatedById != user.Id && !isAdmin)
+        {
+            return Forbid();
+        }
+
+        var model = new EditThreadViewModel
+        {
+            ThreadId = thread.Id,
+            ThreadTitle = thread.Title,
+            ThreadContent = thread.Content,
+            ExistingImage = thread.Image
+        };
+        return View(model);
+    }
+
     [HttpPost]
     [ValidateAntiForgeryToken]
     [Authorize]
-    public async Task<IActionResult> AddComment(CreateCommentViewModel model)
+    public async Task<IActionResult> Edit(EditThreadViewModel model)
     {
         if (!ModelState.IsValid)
         {
-            return RedirectToAction("Details", new { id = model.ThreadId });
+            return View(model);
+        }
+        var thread = await _context.Threads.FirstOrDefaultAsync(t => t.Id == model.ThreadId);
+        if (thread == null)
+        {
+            return NotFound();
         }
         var user = await _userManager.GetUserAsync(User);
-        var comment = new Comment
+        var isAdmin = User.IsInRole("Admin");
+        if (thread.CreatedById != user.Id && !isAdmin)
         {
-            ThreadId = model.ThreadId,
-            Content = model.Content,
-            Created = DateTime.Now,
-            CreatedById = user.Id
-        };
+            return Forbid();
+        }
+        thread.Title = model.ThreadTitle;
+        thread.Content = model.ThreadContent;
         if (model.ImageFile != null && model.ImageFile.Length > 0)
         {
             using var ms = new MemoryStream();
             await model.ImageFile.CopyToAsync(ms);
-            comment.Image = ms.ToArray();
+            thread.Image = ms.ToArray();
         }
-        _context.Comments.Add(comment);
         await _context.SaveChangesAsync();
-        return RedirectToAction("Details", new { id = model.ThreadId });
+        return RedirectToAction("Details", new { id = thread.Id });
     }
-    
-    
 }
