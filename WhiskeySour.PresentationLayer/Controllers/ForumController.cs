@@ -192,6 +192,36 @@ public class ForumController : Controller
         
     }
 
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> DeleteImage(int id, string type)
+    {
+        var user  = await _userManager.GetUserAsync(User);
+        var isAdmin = User.IsInRole("Admin");
+        if (type == "thread")
+        {
+            var thread = await _context.Threads.FirstOrDefaultAsync(t => t.Id == id);
+            if (thread == null) return NotFound();
+            if (thread.CreatedById != user.Id && !isAdmin) return Forbid();
+            thread.Image = null;
+        } else if (type == "comment")
+        {
+            var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
+            if (comment == null) return NotFound();
+
+            if (comment.CreatedById != user.Id && !isAdmin) return Forbid();
+
+            comment.Image = null;
+        } else
+        {
+            return BadRequest("Unknown type.");
+        }
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Details", new { id = (type == "thread" ? id : _context.Comments
+            .FirstOrDefault(c => c.Id == id)!.ThreadId) });
+    }
+
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Edit(int id)
@@ -250,4 +280,68 @@ public class ForumController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Details", new { id = thread.Id });
     }
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> EditComment(int id)
+    {
+        var comment = await _context.Comments
+                .Include(c => c.CreatedBy)
+            .FirstOrDefaultAsync(c => c.Id == id);
+        if (comment == null)
+        {
+            return NotFound();
+        }
+        var user = await _userManager.GetUserAsync(User);
+        var isAdmin = User.IsInRole("Admin");
+        if (comment.CreatedById != user.Id && !isAdmin)
+        {
+            return Forbid();
+        }
+        var model = new EditCommentViewModel
+        {
+            CommentId = comment.Id,
+            Content = comment.Content,
+            ExistingImage = comment.Image,
+            ThreadId = comment.ThreadId
+        };
+        return View(model);
+    }
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> EditComment(EditCommentViewModel model)
+    {
+        if (!ModelState.IsValid)
+        {
+            return View(model);
+        }
+        var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == model.CommentId);
+        if (comment == null)
+        {
+            return NotFound();
+        }
+        var user = await _userManager.GetUserAsync(User);
+        var isAdmin = User.IsInRole("Admin");
+        if (comment.CreatedById != user.Id && !isAdmin)
+        {
+            return Forbid();
+        }
+        comment.Content = model.Content;
+
+        if (model.RemoveImage)
+        {
+            comment.Image = null;
+        }
+        else if (model.ImageFile != null || model.ImageFile.Length > 0)
+        {
+            using var ms = new MemoryStream();
+            await model.ImageFile.CopyToAsync(ms);
+            comment.Image = ms.ToArray();
+        }
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Details", new { id = comment.ThreadId });
+    }
+    
 }
