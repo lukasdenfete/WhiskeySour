@@ -9,7 +9,7 @@
 </div>
 <h2>@Model.ThreadTitle</h2>
 <p><strong>Created by:</strong> @Model.CreatedByName</p>
-<p><strong>Date:</strong> @Model.Created.ToString("yyyy-MM-dd HH:mm")</p>
+<p>@Model.Created.ToString("yyyy-MM-dd HH:mm")</p>
 <p>@Model.ThreadContent</p>
 
 @if (Model.ThreadImage != null)
@@ -72,7 +72,7 @@ else
         <span asp-validation-for="NewComment.Content" class="text-danger"></span>
     </div>
     <div class="form-group">
-        <label for="ImageFile">Upload picture</label>
+        <label for="ImageFile">Add image to your comment (optional)</label>
         <input type="file" name="ImageFile" class="form-control"/>
     </div>
     <button type="submit" class="btn btn-dark mt-2">Post Comment </button>
