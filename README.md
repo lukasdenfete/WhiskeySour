@@ -8,11 +8,11 @@ FEATURES
 
 Product catalog management
 
-Search function for users, and products by name and category (in progress)
+Search function for users, and products by name and category
 
 User authentication with ASP.NET Identity
 
-Community section with chat forum and private messaging (planned)
+Community section with chat forum and private messaging (in progress)
 
 Shopping cart and checkout system for product purchases (planned)
 
