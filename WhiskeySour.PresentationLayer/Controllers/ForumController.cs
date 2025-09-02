@@ -125,6 +125,7 @@ public class ForumController : Controller
             CommentCount = thread.Comments.Count,
             Created = thread.Created,
             ThreadImage = thread.Image,
+            EditedAt = thread.EditedAt,
             Comments = thread.Comments.Select(c => new CommentViewModel
             {
                 Content = c.Content,
@@ -132,7 +133,8 @@ public class ForumController : Controller
                 CreatedById = c.CreatedBy.Id,
                 CommentId = c.Id,
                 Created = c.Created,
-                Image = c.Image
+                Image = c.Image,
+                EditedAt = c.EditedAt
             }).ToList(),
             NewComment = new CreateCommentViewModel
             {
@@ -271,6 +273,7 @@ public class ForumController : Controller
         }
         thread.Title = model.ThreadTitle;
         thread.Content = model.ThreadContent;
+        thread.EditedAt = DateTime.Now;
         if (model.ImageFile != null && model.ImageFile.Length > 0)
         {
             using var ms = new MemoryStream();
@@ -334,12 +337,13 @@ public class ForumController : Controller
         {
             comment.Image = null;
         }
-        else if (model.ImageFile != null || model.ImageFile.Length > 0)
+        else if (model.ImageFile != null && model.ImageFile.Length > 0)
         {
             using var ms = new MemoryStream();
             await model.ImageFile.CopyToAsync(ms);
             comment.Image = ms.ToArray();
         }
+        comment.EditedAt = DateTime.Now;
         await _context.SaveChangesAsync();
         return RedirectToAction("Details", new { id = comment.ThreadId });
     }

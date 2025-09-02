@@ -9,7 +9,13 @@
 </div>
 <h2>@Model.ThreadTitle</h2>
 <p><strong>Created by:</strong> @Model.CreatedByName</p>
-<p>@Model.Created.ToString("yyyy-MM-dd HH:mm")</p>
+<p>
+    @Model.Created.ToString("yyyy-MM-dd HH:mm")
+    @if (Model.IsEdited)
+    {
+        <span class="ms-2 text-muted">(Edited: @Model.EditedAt?.ToString("yyyy-MM-dd HH:mm"))</span>
+    }
+</p>
 <p>@Model.ThreadContent</p>
 
 @if (Model.ThreadImage != null)
@@ -46,6 +52,10 @@
                 <div class="d-flex justify-content-between align-items-center mt-2">
                 <small class="text-muted">
                     By @comment.CreatedByName on @comment.Created.ToString("yyyy-MM-dd HH:mm")
+                    @if (comment.IsEdited)
+                    {
+                        <span class="ms-2">(Edited: @comment.EditedAt?.ToString("yyyy-MM-dd HH:mm"))</span>
+                    }
                 </small>
                 @if (comment.CreatedById == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
                 {

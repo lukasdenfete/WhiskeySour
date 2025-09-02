@@ -16,4 +16,6 @@ public class ForumViewModel
     public List<CommentViewModel> Comments { get; set; }
     public CreateCommentViewModel NewComment { get; set; }
     public byte[]? ThreadImage { get; set; } // Visning av trådbild
+    public DateTime? EditedAt { get; set; }
+    public bool IsEdited => EditedAt.HasValue;
 }

@@ -13,4 +13,6 @@ public class Comment
     public string CreatedById { get; set; }
     public User CreatedBy { get; set; }
     public byte[]? Image { get; set; }
+    public DateTime? EditedAt { get; set; }
+    public bool isEdited => EditedAt.HasValue;
 }

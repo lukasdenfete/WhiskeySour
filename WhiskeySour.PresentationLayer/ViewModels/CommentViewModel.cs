@@ -11,4 +11,6 @@ public class CommentViewModel
     public string CreatedByName { get; set; }
     public DateTime Created { get; set; }
     public byte[]? Image { get; set; }
+    public DateTime? EditedAt { get; set; }
+    public bool IsEdited => EditedAt.HasValue;
 }

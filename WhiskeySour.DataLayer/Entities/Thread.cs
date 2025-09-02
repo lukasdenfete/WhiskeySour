@@ -14,5 +14,7 @@ public class Thread
     public User CreatedBy { get; set; }
     public ICollection<Comment> Comments { get; set; }
     public byte[]? Image { get; set; }
+    public DateTime? EditedAt { get; set; }
+    public bool isEdited => EditedAt.HasValue;
     
 }
