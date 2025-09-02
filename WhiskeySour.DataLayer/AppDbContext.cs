@@ -11,6 +11,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Order> Orders { get; set; }
     public DbSet<Thread> Threads { get; set; }
     public DbSet<Comment> Comments { get; set; }
+    public DbSet<CommentLike> CommentLikes { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -64,6 +65,18 @@ public class AppDbContext : IdentityDbContext<User>
             .HasOne(c => c.CreatedBy)
             .WithMany()
             .HasForeignKey(c => c.CreatedById)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<CommentLike>()
+            .HasOne(cl => cl.Comment)
+            .WithMany()
+            .HasForeignKey(cl => cl.CommentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<CommentLike>()
+            .HasOne(cl => cl.User)
+            .WithMany()
+            .HasForeignKey(cl => cl.UserId)
             .OnDelete(DeleteBehavior.Restrict);
     }
     

@@ -134,7 +134,10 @@ public class ForumController : Controller
                 CommentId = c.Id,
                 Created = c.Created,
                 Image = c.Image,
-                EditedAt = c.EditedAt
+                EditedAt = c.EditedAt,
+                Likes = _context.CommentLikes.Count(cl => cl.CommentId == c.Id),
+                HasLiked = User.Identity.IsAuthenticated
+                            && _context.CommentLikes.Any(cl => cl.CommentId == c.Id && cl.UserId == _userManager.GetUserId(User)) 
             }).ToList(),
             NewComment = new CreateCommentViewModel
             {
@@ -347,5 +350,26 @@ public class ForumController : Controller
         await _context.SaveChangesAsync();
         return RedirectToAction("Details", new { id = comment.ThreadId });
     }
-    
+
+    [HttpPost]
+    [Authorize]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> LikeComment(int commentId)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var existingLike = await _context.CommentLikes
+            .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == user.Id);
+
+        if (existingLike == null)
+        {
+            _context.CommentLikes.Add(new CommentLike
+            {
+                CommentId = commentId,
+                UserId = user.Id
+            });
+            await _context.SaveChangesAsync();
+        }
+        var threadId = (await _context.Comments.FirstOrDefaultAsync(c => c.Id == commentId))!.ThreadId; // redirecta till rätt tråd
+        return RedirectToAction("Details", new { id = threadId });
+    }
 }

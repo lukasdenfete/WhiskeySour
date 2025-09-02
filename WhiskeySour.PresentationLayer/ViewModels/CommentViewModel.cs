@@ -13,4 +13,6 @@ public class CommentViewModel
     public byte[]? Image { get; set; }
     public DateTime? EditedAt { get; set; }
     public bool IsEdited => EditedAt.HasValue;
+    public int Likes { get; set; }
+    public bool HasLiked { get; set; }
 }

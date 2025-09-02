@@ -15,4 +15,5 @@ public class Comment
     public byte[]? Image { get; set; }
     public DateTime? EditedAt { get; set; }
     public bool isEdited => EditedAt.HasValue;
+    public int Likes { get; set; } = 0;
 }
