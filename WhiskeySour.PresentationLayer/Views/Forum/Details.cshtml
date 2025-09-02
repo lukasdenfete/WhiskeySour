@@ -8,9 +8,8 @@
     </a>
 </div>
 <h2>@Model.ThreadTitle</h2>
-<p><strong>Created by:</strong> @Model.CreatedByName</p>
-<p>
-    @Model.Created.ToString("yyyy-MM-dd HH:mm")
+<p class="mb-2">
+    <strong>Created by:</strong> @Model.CreatedByName on @Model.Created.ToString("yyyy-MM-dd HH:mm")
     @if (Model.IsEdited)
     {
         <span class="ms-2 text-muted">(Edited: @Model.EditedAt?.ToString("yyyy-MM-dd HH:mm"))</span>
