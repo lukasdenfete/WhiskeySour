@@ -15,4 +15,5 @@ public class CommentViewModel
     public bool IsEdited => EditedAt.HasValue;
     public int Likes { get; set; }
     public bool HasLiked { get; set; }
+    public byte[] ProfilePicture { get; set; }
 }

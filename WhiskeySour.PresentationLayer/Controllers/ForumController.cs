@@ -137,7 +137,8 @@ public class ForumController : Controller
                 EditedAt = c.EditedAt,
                 Likes = _context.CommentLikes.Count(cl => cl.CommentId == c.Id),
                 HasLiked = User.Identity.IsAuthenticated
-                            && _context.CommentLikes.Any(cl => cl.CommentId == c.Id && cl.UserId == _userManager.GetUserId(User)) 
+                            && _context.CommentLikes.Any(cl => cl.CommentId == c.Id && cl.UserId == _userManager.GetUserId(User)),
+                ProfilePicture = c.CreatedBy.ProfilePicture
             }).ToList(),
             NewComment = new CreateCommentViewModel
             {

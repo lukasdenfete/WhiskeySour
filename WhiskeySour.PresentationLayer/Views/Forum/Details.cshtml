@@ -42,45 +42,55 @@
         @foreach (var comment in Model.Comments)
         {
             <li class="list-group-item">
+                
                 <div>
-                <p>@comment.Content</p>
-                @if (comment.Image != null)
-                {
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(comment.Image)" class="img-fluid mb-2" style="max-height: 200px;"/>
-                }
-                <div class="mt-2 d-flex align-items-center">
-                    <span>@comment.Likes @((comment.Likes == 1) ? "like" : "likes")</span> @* om 1 == true är det like, annars likes *@
-                    <form asp-action="LikeComment" method="post">
-                        <input type="hidden" name="commentId" value="@comment.CommentId"/>
-                        <button type="submit" class="btn btn-sm @(comment.HasLiked ? "btn-primary" : "btn-outline-primary") ms-2">
-                            @(comment.HasLiked ? "👎" : "👍")
-                        </button>
-                    </form>
-                </div>
-                
-                
-                <div class="d-flex justify-content-between align-items-center mt-2">
-                <small class="text-muted">
-                    By @comment.CreatedByName on @comment.Created.ToString("yyyy-MM-dd HH:mm")
-                    @if (comment.IsEdited)
+                    <p>@comment.Content</p>
+                    @if (comment.Image != null)
                     {
-                        <span class="ms-2">(Edited: @comment.EditedAt?.ToString("yyyy-MM-dd HH:mm"))</span>
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(comment.Image)" class="img-fluid mb-2" style="max-height: 200px;"/>
                     }
-                </small>
-                @if (comment.CreatedById == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
-                {
-                    <div class="d-flex gap-2 mt-2">
-                        <a asp-controller="Forum" asp-action="EditComment" asp-route-id="@comment.CommentId"
-                           class="btn btn-outline-dark btn-sm me-2">Edit</a>
-                        <form asp-controller="Forum" asp-action="DeleteComment" method="post" style="display:inline;"
-                              onsubmit="return confirm('Are you sure you want to delete this comment?');">
-                            <input type="hidden" name="id" value="@comment.CommentId"/>
-                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                   
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                            <small class="text-muted d-flex align-items-center">
+                                @if (comment.ProfilePicture != null)
+                                {
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(comment.ProfilePicture)"
+                                         class="rounded-circle me-2"
+                                         style="width:30px;height:30px;object-fit:cover;" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/default-profilbild.png"
+                                         class="rounded-circle me-2"
+                                         style="width:30px;height:30px;object-fit:cover;" />
+                                }
+                                @comment.CreatedByName  @comment.Created.ToString("yyyy-MM-dd HH:mm")
+                            @if (comment.IsEdited)
+                            {
+                                <span class="ms-2">(Edited: @comment.EditedAt?.ToString("yyyy-MM-dd HH:mm"))</span>
+                            }
+                                <span class="ms-5">@comment.Likes @((comment.Likes == 1) ? "like" : "likes")</span> @* om 1 == true är det like, annars likes *@
+                                <form asp-action="LikeComment" method="post">
+                                    <input type="hidden" name="commentId" value="@comment.CommentId"/>
+                                    <button type="submit" class="btn btn-sm @(comment.HasLiked ? "btn-primary" : "btn-outline-primary") ms-2">
+                                        @(comment.HasLiked ? "👎" : "👍")
+                                    </button>
+                                </form>
+                        </small>
+                        @if (comment.CreatedById == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
+                        {
+                            <div class="d-flex gap-2 mt-2">
+                                <a asp-controller="Forum" asp-action="EditComment" asp-route-id="@comment.CommentId"
+                                   class="btn btn-outline-dark btn-sm me-2">Edit</a>
+                                <form asp-controller="Forum" asp-action="DeleteComment" method="post" style="display:inline;"
+                                      onsubmit="return confirm('Are you sure you want to delete this comment?');">
+                                    <input type="hidden" name="id" value="@comment.CommentId"/>
+                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
 
-                        </form>
+                                </form>
+                            </div>
+                        }
                     </div>
-                }
-                </div>
                 </div>
             </li>
         }
