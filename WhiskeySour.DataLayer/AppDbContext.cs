@@ -12,6 +12,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Thread> Threads { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<CommentLike> CommentLikes { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -77,6 +78,18 @@ public class AppDbContext : IdentityDbContext<User>
             .HasOne(cl => cl.User)
             .WithMany()
             .HasForeignKey(cl => cl.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Message>()
+            .HasOne(m => m.Sender)
+            .WithMany()
+            .HasForeignKey(m => m.SenderId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Message>()
+            .HasOne(m => m.Receiver)
+            .WithMany()
+            .HasForeignKey(m => m.ReceiverId)
             .OnDelete(DeleteBehavior.Restrict);
     }
     
