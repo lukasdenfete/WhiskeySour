@@ -52,7 +52,9 @@
                     <span>@comment.Likes @((comment.Likes == 1) ? "like" : "likes")</span> @* om 1 == true är det like, annars likes *@
                     <form asp-action="LikeComment" method="post">
                         <input type="hidden" name="commentId" value="@comment.CommentId"/>
-                        <button type="submit" class="btn btn-sm btn-outline-primary ms-2" @(comment.HasLiked ? "disabled" : "")>👍</button>
+                        <button type="submit" class="btn btn-sm @(comment.HasLiked ? "btn-primary" : "btn-outline-primary") ms-2">
+                            @(comment.HasLiked ? "👎" : "👍")
+                        </button>
                     </form>
                 </div>
                 

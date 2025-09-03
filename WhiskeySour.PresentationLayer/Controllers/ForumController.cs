@@ -367,8 +367,13 @@ public class ForumController : Controller
                 CommentId = commentId,
                 UserId = user.Id
             });
-            await _context.SaveChangesAsync();
         }
+        else
+        {
+            _context.CommentLikes.Remove(existingLike);
+        }
+        await _context.SaveChangesAsync();
+
         var threadId = (await _context.Comments.FirstOrDefaultAsync(c => c.Id == commentId))!.ThreadId; // redirecta till rätt tråd
         return RedirectToAction("Details", new { id = threadId });
     }
