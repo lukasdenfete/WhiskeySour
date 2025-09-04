@@ -8,4 +8,5 @@ public class ProfileViewModel
     public string LastName { get; set; }
     public byte[]? ProfilePicture { get; set; }
     public IFormFile? ImageFile { get; set; } //ladda upp ny bild
+    public string UserId { get; set; }
 }

@@ -25,6 +25,7 @@ public class ProfileController : Controller
             LastName = user.LastName,
             Email = user.UserName,
             ProfilePicture = user.ProfilePicture,
+            UserId = user.Id
         };
         return View(vm);
     }
@@ -84,6 +85,7 @@ public class ProfileController : Controller
         }
         var pvm = new ProfileViewModel
         {
+            UserId = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.UserName,

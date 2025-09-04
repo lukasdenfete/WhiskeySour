@@ -1,0 +1,30 @@
+@using System.Security.Claims
+@model List<WhiskeySour.DataLayer.Message>
+
+@{
+    ViewData["Title"] = "Messages";
+}
+<h2>Conversations</h2>
+
+@if (!Model.Any())
+{
+    <p>You have no conversations yet.</p>
+}
+else
+{
+    <ul class="list-group">
+        @foreach (var msg in Model)
+        {
+            var partnerId = msg.SenderId == User.FindFirst(ClaimTypes.NameIdentifier).Value
+                ? msg.ReceiverId
+                : msg.SenderId;
+            <li class="list-group-item">
+                <div>
+                    <strong>Conversation with @partnerId</strong>
+                    <small>@msg.Content</small>
+                </div>       
+                <a class="btn btn-dark btn-sm" asp-controller="Message" asp-action="Conversation" asp-route-id="@partnerId">Open</a>
+            </li>
+        }
+    </ul>
+}

@@ -1,0 +1,29 @@
+@using System.Security.Claims
+
+@model List<WhiskeySour.DataLayer.Message>
+
+@{
+    ViewData["Title"] = "Conversation";
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<h2>Conversation</h2>
+
+<div class="mb-3">
+    @foreach (var message in Model)
+    {
+         var isMine = string.Equals(message.SenderId, currentUserId, StringComparison.Ordinal);
+                     <div class="p-2 mb-1 @(isMine ? "bg-light text-end" : "bg-secondary text-white text-start rounded")">
+            <strong>@(isMine ? "Me" : message.Sender?.FirstName ?? "Unknown")</strong>: @message.Content
+            <br/>
+            <small class="text-muted">@message.SentAt.ToString("u")</small>
+        </div>
+    }
+</div>
+<form asp-controller="Message" asp-action="Send" method="post">
+    <input type="hidden" name="receiverId" value="@ViewBag.PartnerId" />
+    <div class="input-group">
+        <textarea name="content" class="form-control" rows="2" placeholder="Write a message.."></textarea>
+        <button type="submit" class="btn btn-dark ms-2">Send</button>
+    </div>
+</form>
