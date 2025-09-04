@@ -16,7 +16,7 @@
                      <div class="p-2 mb-1 @(isMine ? "bg-light text-end" : "bg-secondary text-white text-start rounded")">
             <strong>@(isMine ? "Me" : message.Sender?.FirstName ?? "Unknown")</strong>: @message.Content
             <br/>
-            <small class="text-muted">@message.SentAt.ToString("u")</small>
+            <small class="text-muted">@message.SentAt.ToString("yyyy-MM-dd HH:mm")</small>
         </div>
     }
 </div>
