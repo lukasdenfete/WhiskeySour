@@ -29,6 +29,16 @@ public class MessageController : Controller
             .Select(g => g.OrderByDescending(m => m.SentAt).First())
             .ToList();
         
+        var partnerIds = conversations
+            .Select(m => m.SenderId == user.Id ? m.ReceiverId : m.SenderId)
+            .Distinct()
+            .ToList();
+        
+        var partners = await _context.Users
+            .Where(u => partnerIds.Contains(u.Id))
+            .ToDictionaryAsync(u => u.Id, u => u.FirstName + " " + u.LastName);
+        
+        ViewBag.Partners = partners;
         return View(conversations);
     }
 

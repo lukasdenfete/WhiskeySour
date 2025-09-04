@@ -18,9 +18,10 @@ else
             var partnerId = msg.SenderId == User.FindFirst(ClaimTypes.NameIdentifier).Value
                 ? msg.ReceiverId
                 : msg.SenderId;
+            
             <li class="list-group-item">
                 <div>
-                    <strong>Conversation with @partnerId</strong>
+                    <strong>Conversation with @ViewBag.Partners[partnerId]</strong>
                     <small>@msg.Content</small>
                 </div>       
                 <a class="btn btn-dark btn-sm" asp-controller="Message" asp-action="Conversation" asp-route-id="@partnerId">Open</a>
