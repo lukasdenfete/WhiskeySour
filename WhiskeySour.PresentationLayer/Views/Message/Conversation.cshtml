@@ -1,6 +1,6 @@
 @using System.Security.Claims
 
-@model List<WhiskeySour.DataLayer.Message>
+@model List<WhiskeySour.Web.ViewModels.MessageViewModel>
 
 @{
     ViewData["Title"] = "Conversation";
@@ -12,9 +12,8 @@
 <div class="mb-3">
     @foreach (var message in Model)
     {
-         var isMine = string.Equals(message.SenderId, currentUserId, StringComparison.Ordinal);
-                     <div class="p-2 mb-1 @(isMine ? "bg-light text-end" : "bg-secondary text-white text-start rounded")">
-            <strong>@(isMine ? "Me" : message.Sender?.FirstName ?? "Unknown")</strong>: @message.Content
+        <div class="p-2 mb-1 @(message.IsMine ? "bg-light text-end" : "bg-secondary text-white text-start rounded")">
+            <strong>@(message.IsMine ? "Me" : message.SenderName)</strong>: @message.Content
             <br/>
             <small class="text-muted">@message.SentAt.ToString("yyyy-MM-dd HH:mm")</small>
         </div>

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WhiskeySour.DataLayer;
+using WhiskeySour.Web.ViewModels;
 
 namespace WhiskeySour.Controllers;
 
@@ -52,8 +53,21 @@ public class MessageController : Controller
             .Include(m => m.Receiver)
             .OrderBy(m => m.SentAt)
             .ToListAsync();
+
+        var mvm = messages.Select(m => new MessageViewModel
+        {
+            SenderId = m.SenderId,
+            SenderName = m.Sender?.FirstName + " " + m.Sender?.LastName,
+            ReceiverId = m.ReceiverId,
+            ReceiverName = m.Receiver?.FirstName + " " + m.Receiver?.LastName,
+            Content = m.Content,
+            SentAt = m.SentAt,
+            IsMine = m.SenderId == user.Id,
+
+        }).ToList();
+        
         ViewBag.PartnerId = id; //id:t på andra användaren i konversationen, för att kunna skicka nya meddelanden i vyn
-        return View(messages);
+        return View(mvm);
     }
 
     public async Task<IActionResult> Send(string receiverId, string content)

@@ -19,13 +19,13 @@ else
                 ? msg.ReceiverId
                 : msg.SenderId;
             
-            <li class="list-group-item">
+            <a class="list-group-item list-group-item-action d-block mb-2" asp-controller="Message" 
+               asp-action="Conversation" asp-route-id="@partnerId">
                 <div>
-                    <strong>Conversation with @ViewBag.Partners[partnerId]</strong>
+                    <strong>@ViewBag.Partners[partnerId]: </strong>
                     <small>@msg.Content</small>
-                </div>       
-                <a class="btn btn-dark btn-sm" asp-controller="Message" asp-action="Conversation" asp-route-id="@partnerId">Open</a>
-            </li>
+                </div>
+            </a>
         }
     </ul>
 }
