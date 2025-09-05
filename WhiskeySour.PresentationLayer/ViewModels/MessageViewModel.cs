@@ -9,4 +9,5 @@ public class MessageViewModel
     public string Content { get; set; }
     public DateTime SentAt { get; set; }
     public bool IsMine { get; set; }
+    public bool IsRead { get; set; }
 }

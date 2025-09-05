@@ -15,7 +15,19 @@
         <div class="p-2 mb-1 @(message.IsMine ? "bg-light text-end" : "bg-secondary text-white text-start rounded")">
             <strong>@(message.IsMine ? "Me" : message.SenderName)</strong>: @message.Content
             <br/>
-            <small class="text-muted">@message.SentAt.ToString("yyyy-MM-dd HH:mm")</small>
+            <small class="text-muted">@message.SentAt.ToString("yyyy-MM-dd HH:mm")
+            @if (message.IsMine)
+            {
+                if (message.IsRead)
+                {
+                    <span class="ms-2 text-success">✓ Read</span>
+                }
+                else
+                {
+                    <span class="ms-2 text-muted">Sent</span>
+                }
+            }
+                </small>
         </div>
     }
 </div>

@@ -53,6 +53,16 @@ public class MessageController : Controller
             .Include(m => m.Receiver)
             .OrderBy(m => m.SentAt)
             .ToListAsync();
+        
+        var unreadMessages = messages
+            .Where(m => m.ReceiverId == user.Id && !m.IsRead)
+            .ToList();
+        foreach (var message in unreadMessages)
+        {
+            message.IsRead = true;
+        }
+
+        await _context.SaveChangesAsync();
 
         var mvm = messages.Select(m => new MessageViewModel
         {
@@ -63,6 +73,7 @@ public class MessageController : Controller
             Content = m.Content,
             SentAt = m.SentAt,
             IsMine = m.SenderId == user.Id,
+            IsRead = m.IsRead,
 
         }).ToList();
         
@@ -82,7 +93,8 @@ public class MessageController : Controller
             Content = content,
             SenderId = user.Id,
             ReceiverId = receiverId,
-            SentAt = DateTime.Now
+            SentAt = DateTime.Now,
+            IsRead = false
         };
         _context.Messages.Add(message);
         await _context.SaveChangesAsync();
