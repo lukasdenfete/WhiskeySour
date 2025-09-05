@@ -22,3 +22,9 @@
     <p><strong>First name:</strong> @Model.FirstName</p>
     <p><strong>Last name:</strong> @Model.LastName</p>
 </div>
+<a class="btn btn-primary"
+   asp-controller="Message"
+   asp-action="Conversation"
+   asp-route-id="@Model.UserId">
+    Send Message
+</a>

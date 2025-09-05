@@ -1,0 +1,38 @@
+@model WhiskeySour.Web.ViewModels.EditCommentViewModel
+
+@{
+    ViewData["Title"] = "Edit Comment";}
+<h2>Edit Comment</h2>
+
+<form asp-action="EditComment" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="CommentId" />
+    <input type="hidden" asp-for="ThreadId" />
+
+    <div class="form-group mb-3">
+        <label asp-for="Content" class="form-label"></label>
+        <textarea asp-for="Content" class="form-control" rows="3"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <label asp-for="ImageFile" class="form-label">Upload image</label>
+        <input asp-for="ImageFile" type="file" class="form-control" />
+    </div>
+
+    @if (Model.ExistingImage != null)
+    {
+        <div class="mb-3">
+            <p>Current image:</p>
+            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ExistingImage)" class="img-fluid mb-2" style="max-height: 200px;" />
+            
+        </div>
+    }
+
+    <button type="submit" class="btn btn-dark">Save changes</button>
+    <a asp-action="Details" asp-route-id="@Model.ThreadId" class="btn btn-dark ms-2">Cancel</a>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

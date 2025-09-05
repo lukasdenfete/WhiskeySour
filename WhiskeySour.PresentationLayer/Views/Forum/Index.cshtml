@@ -1,0 +1,39 @@
+@model List<WhiskeySour.Web.ViewModels.ForumViewModel>
+@{
+    ViewData["Title"] = "Forum";
+}
+<h2 class="d-flex justify-content-center">Welcome to the WhiskeySour forum!</h2>
+
+
+
+<div class="d-flex justify-content-center">
+    @if (Model.Any() && Model != null)
+    {
+            <ul class="list-group w-75">
+                @foreach (var thread in Model)
+                {
+                    <li class="list-group-item">
+                        <a class="h5" asp-controller="Forum" asp-action="Details" asp-route-id="@thread.ThreadId">
+                            @thread.ThreadTitle
+                        </a>
+                        <p class="text-muted">@thread.CreatedByName @thread.Created.ToString("yyyy-MM-dd")</p>
+                        <div class="d-flex justify-content-end">
+                            <p><strong>@thread.CommentCount</strong> replies</p>
+                        </div>
+                    </li>
+                }
+            </ul>
+        
+    }
+    else
+    {
+        <div class="w-75 text-center">
+            <p>There are no threads in the forum right now, be the first to write something!</p>
+        </div>
+    }
+</div>
+<br/>
+<div class="d-flex justify-content-center">
+    <a class="btn btn-dark" asp-controller="Forum" asp-action="Create">Create thread</a>
+</div>
+
