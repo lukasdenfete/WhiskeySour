@@ -21,8 +21,6 @@ public class FollowController : Controller
     [Authorize]
     public async Task<IActionResult> Follow(string userId)
     {
-       // if(String.IsNullOrWhiteSpace(userId)) return BadRequest();
-       
        var targetUser = await _userManager.FindByIdAsync(userId);
        if (targetUser == null)
        {
