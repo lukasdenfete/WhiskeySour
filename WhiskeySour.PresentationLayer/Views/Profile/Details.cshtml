@@ -1,3 +1,4 @@
+@using System.Security.Claims
 @model WhiskeySour.Web.ViewModels.ProfileViewModel
 
 @{
@@ -22,9 +23,28 @@
     <p><strong>First name:</strong> @Model.FirstName</p>
     <p><strong>Last name:</strong> @Model.LastName</p>
 </div>
-<a class="btn btn-primary"
+<div class="d-flex align-items-center">
+<a class="btn btn-dark me-2"
    asp-controller="Message"
    asp-action="Conversation"
    asp-route-id="@Model.UserId">
     Send Message
 </a>
+@if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) != Model.UserId)
+{
+    if (Model.IsFollowedByCurrentUser)
+    {
+        <form asp-controller="Follow" asp-action="Unfollow" method="post">
+            <input type="hidden" name="userId" value="@Model.UserId"/>
+            <button type="submit" class="btn btn-outline-dark">Unfollow</button>
+        </form>
+    }
+    else
+    {
+        <form asp-controller="Follow" asp-action="Follow" method="post">
+            <input type="hidden" name="userId" value="@Model.UserId"/>
+            <button type="submit" class="btn btn-dark">Follow</button>
+        </form>
+    }
+}
+</div>

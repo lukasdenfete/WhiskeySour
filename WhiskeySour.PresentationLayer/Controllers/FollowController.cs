@@ -21,17 +21,25 @@ public class FollowController : Controller
     [Authorize]
     public async Task<IActionResult> Follow(string userId)
     {
-        var user = await _userManager.FindByIdAsync(userId);
-        if(user.Id == userId) return BadRequest("You cannot follow yourself");
+       // if(String.IsNullOrWhiteSpace(userId)) return BadRequest();
+       
+       var targetUser = await _userManager.FindByIdAsync(userId);
+       if (targetUser == null)
+       {
+           return NotFound();
+       }
+       var currentUser = await _userManager.GetUserAsync(User);
+       
+       if(currentUser.Id == userId) return BadRequest("You cannot follow yourself");
         
         var alreadyFollowing = await _context.Follows
-            .AnyAsync(f => f.FollowerId == user.Id && f.FolloweeId == userId);
+            .AnyAsync(f => f.FollowerId == currentUser.Id && f.FolloweeId == userId);
 
         if (!alreadyFollowing)
         {
             _context.Follows.Add(new Follow
             {
-                FollowerId = user.Id,
+                FollowerId = currentUser.Id,
                 FolloweeId = userId
             });
             await _context.SaveChangesAsync();

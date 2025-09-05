@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using WhiskeySour.DataLayer;
 using WhiskeySour.Web.ViewModels;
 
@@ -9,10 +10,12 @@ namespace WhiskeySour.Controllers;
 public class ProfileController : Controller
 {
     private readonly UserManager<User> _userManager;
+    private readonly AppDbContext _context;
 
-    public ProfileController(UserManager<User> userManager)
+    public ProfileController(UserManager<User> userManager, AppDbContext context)
     {
         _userManager = userManager;
+        _context = context;
     }
 
     [HttpGet]
@@ -79,17 +82,20 @@ public class ProfileController : Controller
     {
         var currentUser = await _userManager.GetUserAsync(User);
         var user = await _userManager.FindByIdAsync(id);
+        var isFollowed = await _context.Follows.AnyAsync(f => f.FollowerId == currentUser.Id && f.FolloweeId == id);
         if (id == currentUser.Id)
         {
             return RedirectToAction("Index", "Profile");
         }
+        
         var pvm = new ProfileViewModel
         {
             UserId = user.Id,
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.UserName,
-            ProfilePicture = user.ProfilePicture
+            ProfilePicture = user.ProfilePicture,
+            IsFollowedByCurrentUser = isFollowed
         };
         return View(pvm);
     }

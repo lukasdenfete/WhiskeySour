@@ -9,4 +9,5 @@ public class ProfileViewModel
     public byte[]? ProfilePicture { get; set; }
     public IFormFile? ImageFile { get; set; } //ladda upp ny bild
     public string UserId { get; set; }
+    public bool IsFollowedByCurrentUser { get; set; }
 }
