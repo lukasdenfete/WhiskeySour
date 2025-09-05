@@ -13,6 +13,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Comment> Comments { get; set; }
     public DbSet<CommentLike> CommentLikes { get; set; }
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Follow> Follows { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -90,6 +91,18 @@ public class AppDbContext : IdentityDbContext<User>
             .HasOne(m => m.Receiver)
             .WithMany()
             .HasForeignKey(m => m.ReceiverId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Follow>()
+            .HasOne(f => f.Follower)
+            .WithMany()
+            .HasForeignKey(f => f.FollowerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Follow>()
+            .HasOne(f => f.Followee)
+            .WithMany()
+            .HasForeignKey(f => f.FolloweeId)
             .OnDelete(DeleteBehavior.Restrict);
     }
     
