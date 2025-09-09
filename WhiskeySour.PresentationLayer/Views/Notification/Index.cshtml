@@ -1,0 +1,19 @@
+@model IEnumerable<WhiskeySour.Web.ViewModels.NotificationViewModel>
+
+@{
+    ViewData["Title"] = "Notifications";
+}
+
+<h2>Notifications</h2>
+
+<ul class="list-group">
+@foreach (var notification in Model)
+{
+    <li class="list-group-item">
+        <p>@notification.Type</p>
+        <p>@notification.MessageText</p>
+        <small class="text-muted">@notification.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+
+    </li>
+}
+</ul>

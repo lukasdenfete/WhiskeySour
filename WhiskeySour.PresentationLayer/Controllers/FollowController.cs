@@ -40,6 +40,15 @@ public class FollowController : Controller
                 FollowerId = currentUser.Id,
                 FolloweeId = userId
             });
+            var notification = new Notification
+            {
+                UserId = targetUser.Id,
+                FromUserId = currentUser.Id,
+                Type = NotificationType.NewFollower,
+                CreatedAt = DateTime.Now,
+                isRead = false
+            };
+            _context.Notifications.Add(notification);
             await _context.SaveChangesAsync();
         }
         return RedirectToAction("Details", "Profile", new { id = userId });

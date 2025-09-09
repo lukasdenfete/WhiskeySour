@@ -97,6 +97,17 @@ public class MessageController : Controller
             IsRead = false
         };
         _context.Messages.Add(message);
+        var notification = new Notification
+        {
+            UserId = receiverId,
+            FromUserId = user.Id,
+            Type = NotificationType.NewMessage,
+            MessageId = message.Id,
+            Message = message,
+            isRead = false,
+            CreatedAt = DateTime.Now
+        };
+        _context.Notifications.Add(notification);
         await _context.SaveChangesAsync();
         return RedirectToAction("Conversation", new { id = receiverId });
     }

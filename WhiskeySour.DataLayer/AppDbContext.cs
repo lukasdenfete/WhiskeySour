@@ -14,6 +14,7 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<CommentLike> CommentLikes { get; set; }
     public DbSet<Message> Messages { get; set; }
     public DbSet<Follow> Follows { get; set; }
+    public DbSet<Notification> Notifications { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
