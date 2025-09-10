@@ -74,13 +74,13 @@ public class AppDbContext : IdentityDbContext<User>
             .HasOne(cl => cl.Comment)
             .WithMany()
             .HasForeignKey(cl => cl.CommentId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<CommentLike>()
             .HasOne(cl => cl.User)
             .WithMany()
             .HasForeignKey(cl => cl.UserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
         
         modelBuilder.Entity<Message>()
             .HasOne(m => m.Sender)
@@ -116,25 +116,25 @@ public class AppDbContext : IdentityDbContext<User>
             .HasOne(n => n.FromUser)
             .WithMany()
             .HasForeignKey(n => n.FromUserId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Thread)
             .WithMany()
             .HasForeignKey(n => n.ThreadId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Comment)
             .WithMany()
             .HasForeignKey(n => n.CommentId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Message)
             .WithMany()
             .HasForeignKey(n => n.MessageId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
     }
     
     

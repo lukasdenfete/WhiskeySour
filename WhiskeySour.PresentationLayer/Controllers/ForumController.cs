@@ -65,19 +65,19 @@ public class ForumController : Controller
         _context.Comments.Add(comment);
         var thread = await _context.Threads.FirstOrDefaultAsync(t => t.Id == model.ThreadId);
         
-        if(thread.CreatedById != user.Id) { //inga notiser när man kommenterar på sin egen tråd
-        var notification = new Notification
-        {
-            UserId = thread.CreatedById,
-            FromUserId = user.Id,
-            Type = NotificationType.NewComment,
-            CommentId = comment.Id,
-            Comment = comment,
-            isRead = false,
-            CreatedAt = DateTime.Now,
+        if (thread.CreatedById != user.Id) { //inga notiser när man kommenterar på sin egen tråd
+            var notification = new Notification
+            {
+                UserId = thread.CreatedById,
+                FromUserId = user.Id,
+                Type = NotificationType.NewComment,
+                CommentId = comment.Id,
+                Comment = comment,
+                isRead = false,
+                CreatedAt = DateTime.Now
 
-        };
-        _context.Notifications.Add(notification);
+            };
+            _context.Notifications.Add(notification);
         }
         await _context.SaveChangesAsync();
         return RedirectToAction("Details", new { id = model.ThreadId });
