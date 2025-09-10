@@ -74,7 +74,8 @@ public class ForumController : Controller
                 CommentId = comment.Id,
                 Comment = comment,
                 isRead = false,
-                CreatedAt = DateTime.Now
+                CreatedAt = DateTime.Now,
+                ThreadId = thread.Id
 
             };
             _context.Notifications.Add(notification);

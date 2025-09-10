@@ -7,30 +7,40 @@
 
 <h2>Notifications</h2>
 
-<ul class="list-group ">
 @foreach (var notification in Model)
 {
-    <li class="list-group-item">
+    <div class="card mb-3">
+        <div class="card-body">
         @if (notification.Type == NotificationType.NewComment)
         {
+            <a asp-controller="Forum" asp-action="Details" asp-route-id="@notification.ThreadId" 
+               asp-fragment="comment-@notification.CommentId">
             <p>New comment from @notification.FromUserName</p>
             <p>@notification.CommentText</p>
-        } else if (notification.Type == NotificationType.NewFollower)
+            </a>
+        }
+        else if (notification.Type == NotificationType.NewFollower)
         {
+            <a asp-controller="Profile" asp-action="Details" asp-route-id="@notification.FromUserId">
             <p>@notification.FromUserName started following you!</p>
-        } else if (notification.Type == NotificationType.NewMessage)
+            </a>
+        }
+        else if (notification.Type == NotificationType.NewMessage)
         {
+            <a asp-controller="Message" asp-action="Conversation" asp-route-id="@notification.FromUserId">
             <p>New message from @notification.FromUserName</p>
             <p>@notification.MessageText</p>
+            </a>
         }
         else
         {
+            <a asp-controller="Forum" asp-action="Details" asp-route-id="@notification.ThreadId">
             <p>New thread from @notification.FromUserName</p>
             <p>@notification.ThreadTitle</p>
+            </a>
         }
-        
         <small class="text-muted">@notification.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
-
-    </li>
+        </div>
+    </div>
+    
 }
-</ul>
