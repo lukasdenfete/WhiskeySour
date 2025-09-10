@@ -12,9 +12,10 @@ public class Thread
     public DateTime Created { get; set; } = DateTime.Now;
     public string CreatedById { get; set; }
     public User CreatedBy { get; set; }
-    public ICollection<Comment> Comments { get; set; }
+    public ICollection<Comment> Comments { get; set; } = new List<Comment>();
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
     public byte[]? Image { get; set; }
     public DateTime? EditedAt { get; set; }
     public bool isEdited => EditedAt.HasValue;
-    
+        
 }

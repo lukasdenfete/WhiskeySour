@@ -16,4 +16,6 @@ public class Comment
     public DateTime? EditedAt { get; set; }
     public bool isEdited => EditedAt.HasValue;
     public int Likes { get; set; } = 0;
+    public ICollection<CommentLike> CommentLikes { get; set; } = new List<CommentLike>();
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

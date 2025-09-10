@@ -170,6 +170,10 @@ public class ForumController : Controller
     {
         var thread = await _context.Threads
             .Include(t => t.CreatedBy)
+            .Include(t => t.Comments)
+                .ThenInclude(c => c.CommentLikes)
+            .Include(t => t.Comments)
+                .ThenInclude(c => c.Notifications)
             .FirstOrDefaultAsync(t => t.Id == id);
         if (thread == null)
         {
@@ -179,6 +183,7 @@ public class ForumController : Controller
         var isAdmin = User.IsInRole("Admin");
         if (thread.CreatedById == user.Id || isAdmin)
         {
+            
             _context.Threads.Remove(thread);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -195,7 +200,10 @@ public class ForumController : Controller
     {
         var comment = await _context.Comments
             .Include(c => c.CreatedBy)
+            .Include(c => c.CommentLikes)
+            .Include(c => c.Notifications)
             .FirstOrDefaultAsync(c => c.Id == id);
+        
         if (comment == null)
         {
             return NotFound();
