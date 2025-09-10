@@ -72,9 +72,9 @@ public class AppDbContext : IdentityDbContext<User>
         
         modelBuilder.Entity<CommentLike>()
             .HasOne(cl => cl.Comment)
-            .WithMany()
+            .WithMany(c => c.CommentLikes)
             .HasForeignKey(cl => cl.CommentId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<CommentLike>()
             .HasOne(cl => cl.User)
