@@ -126,9 +126,9 @@ public class AppDbContext : IdentityDbContext<User>
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Comment)
-            .WithMany()
+            .WithMany(c => c.Notifications)
             .HasForeignKey(n => n.CommentId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Cascade);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Message)
