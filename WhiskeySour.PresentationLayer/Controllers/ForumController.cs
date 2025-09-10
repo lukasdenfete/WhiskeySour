@@ -97,7 +97,7 @@ public class ForumController : Controller
         if (ModelState.IsValid)
         {
             var user = await _userManager.GetUserAsync(User);
-            var thread = new DataLayer.Thread
+            var thread = new Thread
             {
                 Title = model.ThreadTitle,
                 Content = model.ThreadContent,
@@ -109,6 +109,23 @@ public class ForumController : Controller
                 using var ms = new MemoryStream();
                 await model.ImageFile.CopyToAsync(ms);
                 thread.Image = ms.ToArray();
+            }
+            var followers = _context.Follows.Where(f => f.FolloweeId == user.Id)
+                .Select(f => f.Follower)
+                .ToList();
+            foreach (var follower in followers)
+            {
+                var notification = new Notification
+                {
+                    UserId = follower.Id,
+                    FromUserId = user.Id,
+                    Type = NotificationType.NewThreadFromFollowee,
+                    ThreadId = thread.Id,
+                    Thread = thread,
+                    isRead = false,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(notification);
             }
 
             _context.Threads.Add(thread);
@@ -183,7 +200,17 @@ public class ForumController : Controller
         var isAdmin = User.IsInRole("Admin");
         if (thread.CreatedById == user.Id || isAdmin)
         {
-            
+            // Tar bort trådnotiser manuellt pga fk constraints och multiple cascade paths
+            var threadNotifications = _context.Notifications.Where(n => n.ThreadId == thread.Id);
+            _context.Notifications.RemoveRange(threadNotifications);
+
+            // Tar bort kommentarnotiser manuellt pga fk constraints och multiple cascade paths
+            foreach (var comment in thread.Comments)
+            {
+                var commentNotifications = _context.Notifications.Where(n => n.CommentId == comment.Id);
+                _context.Notifications.RemoveRange(commentNotifications);
+            }
+
             _context.Threads.Remove(thread);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");

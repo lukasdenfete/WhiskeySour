@@ -120,7 +120,7 @@ public class AppDbContext : IdentityDbContext<User>
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Thread)
-            .WithMany()
+            .WithMany(t => t.Notifications)
             .HasForeignKey(n => n.ThreadId)
             .OnDelete(DeleteBehavior.ClientCascade);
 
@@ -128,7 +128,7 @@ public class AppDbContext : IdentityDbContext<User>
             .HasOne(n => n.Comment)
             .WithMany(c => c.Notifications)
             .HasForeignKey(n => n.CommentId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.ClientCascade);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Message)
