@@ -10,37 +10,45 @@
 @foreach (var notification in Model)
 {
     <div class="card mb-3">
-        <div class="card-body">
+        
         @if (notification.Type == NotificationType.NewComment)
         {
-            <a asp-controller="Forum" asp-action="Details" asp-route-id="@notification.ThreadId" 
+            <a class="text-decoration-none text-dark" asp-controller="Forum" asp-action="Details" asp-route-id="@notification.ThreadId"
                asp-fragment="comment-@notification.CommentId">
-            <p>New comment from @notification.FromUserName</p>
-            <p>@notification.CommentText</p>
+                <div class="card-body">
+                <p>New comment from @notification.FromUserName</p>
+                <p>@notification.CommentText</p>
+                </div>
             </a>
         }
         else if (notification.Type == NotificationType.NewFollower)
         {
-            <a asp-controller="Profile" asp-action="Details" asp-route-id="@notification.FromUserId">
-            <p>@notification.FromUserName started following you!</p>
+            <a class="text-decoration-none text-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@notification.FromUserId">
+                <div class="card-body">
+                <p>@notification.FromUserName started following you!</p>
+                </div>
             </a>
         }
         else if (notification.Type == NotificationType.NewMessage)
         {
-            <a asp-controller="Message" asp-action="Conversation" asp-route-id="@notification.FromUserId">
-            <p>New message from @notification.FromUserName</p>
-            <p>@notification.MessageText</p>
+            <a class="text-decoration-none text-dark" asp-controller="Message" asp-action="Conversation" asp-route-id="@notification.FromUserId">
+                <div class="card-body">
+                <p>New message from @notification.FromUserName</p>
+                <p>@notification.MessageText</p>
+                </div>
             </a>
         }
         else
         {
-            <a asp-controller="Forum" asp-action="Details" asp-route-id="@notification.ThreadId">
-            <p>New thread from @notification.FromUserName</p>
-            <p>@notification.ThreadTitle</p>
+            <a class="text-decoration-none text-dark" asp-controller="Forum" asp-action="Details" asp-route-id="@notification.ThreadId">
+                <div class="card-body">
+                <p>New thread from @notification.FromUserName</p>
+                <p>@notification.ThreadTitle</p>
+                </div>
             </a>
         }
-        <small class="text-muted">@notification.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
+        <small class="text-muted ms-2">@notification.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
         </div>
-    </div>
+    
     
 }
