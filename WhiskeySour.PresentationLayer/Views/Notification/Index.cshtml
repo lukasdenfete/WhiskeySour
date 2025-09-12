@@ -9,46 +9,30 @@
 
 @foreach (var notification in Model)
 {
-    <div class="card mb-3">
-        
-        @if (notification.Type == NotificationType.NewComment)
-        {
-            <a class="text-decoration-none text-dark" asp-controller="Forum" asp-action="Details" asp-route-id="@notification.ThreadId"
-               asp-fragment="comment-@notification.CommentId">
-                <div class="card-body">
-                <p>New comment from @notification.FromUserName</p>
-                <p>@notification.CommentText</p>
-                </div>
-            </a>
-        }
-        else if (notification.Type == NotificationType.NewFollower)
-        {
-            <a class="text-decoration-none text-dark" asp-controller="Profile" asp-action="Details" asp-route-id="@notification.FromUserId">
-                <div class="card-body">
-                <p>@notification.FromUserName started following you!</p>
-                </div>
-            </a>
-        }
-        else if (notification.Type == NotificationType.NewMessage)
-        {
-            <a class="text-decoration-none text-dark" asp-controller="Message" asp-action="Conversation" asp-route-id="@notification.FromUserId">
-                <div class="card-body">
-                <p>New message from @notification.FromUserName</p>
-                <p>@notification.MessageText</p>
-                </div>
-            </a>
-        }
-        else
-        {
-            <a class="text-decoration-none text-dark" asp-controller="Forum" asp-action="Details" asp-route-id="@notification.ThreadId">
-                <div class="card-body">
-                <p>New thread from @notification.FromUserName</p>
-                <p>@notification.ThreadTitle</p>
-                </div>
-            </a>
-        }
+    <div class="card mb-3 @(!notification.IsRead ? "border border-danger" : "")">
+        <a class="text-decoration-none text-dark" asp-controller="Notification" asp-action="MarkAsRead" asp-route-id="@notification.Id">
+            <div class="card-body">
+            @if (notification.Type == NotificationType.NewComment)
+            {
+                    <p>New comment from @notification.FromUserName</p>
+                    <p>@notification.CommentText</p>
+            }
+            else if (notification.Type == NotificationType.NewFollower)
+            {
+                    <p>@notification.FromUserName started following you!</p>
+            }
+            else if (notification.Type == NotificationType.NewMessage)
+            {
+                    <p>New message from @notification.FromUserName</p>
+                    <p>@notification.MessageText</p>
+            }
+            else
+            {
+                    <p>New thread from @notification.FromUserName</p>
+                    <p>@notification.ThreadTitle</p>
+            }
+            </div>
+        </a>
         <small class="text-muted ms-2">@notification.CreatedAt.ToString("yyyy-MM-dd HH:mm")</small>
-        </div>
-    
-    
+    </div>
 }

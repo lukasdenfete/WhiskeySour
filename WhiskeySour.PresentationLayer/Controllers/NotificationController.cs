@@ -47,4 +47,37 @@ public class NotificationController : Controller
         return View(notifications);
         
     }
-}
+
+    [HttpGet]
+    [Authorize]
+    public async Task<IActionResult> MarkAsRead(int id)
+    {
+        var user = await _userManager.GetUserAsync(User);
+        var notification = await _context.Notifications
+            .Where(n => n.Id == id && n.UserId == user.Id)
+            .FirstOrDefaultAsync();
+        if (notification == null)
+        {
+            return NotFound();
+        }
+        notification.isRead = true;
+        await _context.SaveChangesAsync();
+
+         switch (notification.Type)
+            {
+                case NotificationType.NewComment:
+                case NotificationType.NewThreadFromFollowee:
+                    return RedirectToAction("Details", "Forum", new { id = notification.ThreadId });
+
+                case NotificationType.NewMessage:
+                    return RedirectToAction("Conversation", "Message", new { id = notification.MessageId });
+
+                case NotificationType.NewFollower:
+                    return RedirectToAction("Details", "Profile", new { id = notification.FromUserId });
+
+                default:
+                    return RedirectToAction("Index", "Notification");
+            }
+                
+        }
+    }
