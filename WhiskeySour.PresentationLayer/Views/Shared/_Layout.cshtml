@@ -52,9 +52,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <li class="nav-item me-2">
-                        <a class="nav-link" asp-controller="Notification" asp-action="Index">
-                            <i class="bi bi-bell fs-3" ></i>
-                        </a>
+                        @await Component.InvokeAsync("UnreadNotifications")
                     </li>
                     <li class="nav-item me-2">
                         <a class="nav-link" asp-controller="Message" asp-action="Index">
