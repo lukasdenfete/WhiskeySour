@@ -67,12 +67,16 @@ async Task CreateRoles(RoleManager<IdentityRole> roleManager, UserManager<User> 
     var adminUser = await userManager.FindByEmailAsync("lukas.rosendahl@hotmail.com");
     if (adminUser == null)
     {
-        var user = new User { UserName = "lukas.rosendahl@hotmail.com", Email = "lukas.rosendahl@hotmail.com" };
+        var user = new User { UserName = "lukas.rosendahl@hotmail.com", Email = "lukas.rosendahl@hotmail.com", FirstName = "Lukas", LastName = "Lukrecio"};
         var createAdminResult = await userManager.CreateAsync(user, "Admin123!");
         if (createAdminResult.Succeeded)
         {
             await userManager.AddToRoleAsync(user, "Admin");
         }
     }
-    await userManager.AddToRoleAsync(adminUser, "Admin");
+    else
+    {
+        await userManager.AddToRoleAsync(adminUser, "Admin");
+
+    }
 }

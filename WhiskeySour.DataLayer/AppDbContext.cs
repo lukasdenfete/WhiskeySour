@@ -91,6 +91,51 @@ public class AppDbContext : IdentityDbContext<User>
             .WithMany()
             .HasForeignKey(m => m.ReceiverId)
             .OnDelete(DeleteBehavior.Restrict);
+<<<<<<< Updated upstream
+=======
+        
+        modelBuilder.Entity<Follow>()
+            .HasOne(f => f.Follower)
+            .WithMany()
+            .HasForeignKey(f => f.FollowerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Follow>()
+            .HasOne(f => f.Followee)
+            .WithMany()
+            .HasForeignKey(f => f.FolloweeId)
+            .OnDelete(DeleteBehavior.Restrict);
+        
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.User)
+            .WithMany()
+            .HasForeignKey(n => n.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.FromUser)
+            .WithMany()
+            .HasForeignKey(n => n.FromUserId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.Thread)
+            .WithMany(t => t.Notifications)
+            .HasForeignKey(n => n.ThreadId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.Comment)
+            .WithMany(c => c.Notifications)
+            .HasForeignKey(n => n.CommentId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Notification>()
+            .HasOne(n => n.Message)
+            .WithMany()
+            .HasForeignKey(n => n.MessageId)
+            .OnDelete(DeleteBehavior.Restrict);
+>>>>>>> Stashed changes
     }
     
     

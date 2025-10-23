@@ -611,6 +611,48 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.Navigation("Sender");
                 });
 
+<<<<<<< Updated upstream
+=======
+            modelBuilder.Entity("WhiskeySour.DataLayer.Notification", b =>
+                {
+                    b.HasOne("WhiskeySour.DataLayer.Comment", "Comment")
+                        .WithMany("Notifications")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WhiskeySour.DataLayer.User", "FromUser")
+                        .WithMany()
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WhiskeySour.DataLayer.Message", "Message")
+                        .WithMany()
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WhiskeySour.DataLayer.Thread", "Thread")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WhiskeySour.DataLayer.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("FromUser");
+
+                    b.Navigation("Message");
+
+                    b.Navigation("Thread");
+
+                    b.Navigation("User");
+                });
+
+>>>>>>> Stashed changes
             modelBuilder.Entity("WhiskeySour.DataLayer.Product", b =>
                 {
                     b.HasOne("WhiskeySour.DataLayer.Category", "Category")
