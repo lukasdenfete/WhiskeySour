@@ -135,13 +135,7 @@ public class AppDbContext : IdentityDbContext<User>
             .WithMany()
             .HasForeignKey(n => n.MessageId)
             .OnDelete(DeleteBehavior.Restrict);
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
+
     }
     
     
