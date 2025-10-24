@@ -40,7 +40,7 @@ public class SearchController : Controller
 
         var userViewModels = users.Select(u => new ProfileViewModel
         {
-            Id = u.Id,
+            UserId = u.Id,
             FirstName = u.FirstName,
             LastName = u.LastName,
             ProfilePicture = u.ProfilePicture

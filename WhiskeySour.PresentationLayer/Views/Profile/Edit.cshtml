@@ -12,6 +12,7 @@
     <img src="@imgSrc" alt="profile picture" class="img-thumbnail mb-3" style="max-height: 200px"/>
 }
 <form asp-action="Edit" method="post" enctype="multipart/form-data" asp-controller="Profile">
+    <input type="hidden" asp-for="UserId"/>
     <div class="form-group">
         <label asp-for="FirstName">First name:</label>
         <input asp-for="FirstName" class="form-control"/>
@@ -32,6 +33,7 @@
         <input asp-for="ImageFile" type="file" class="form-control"/>
     </div>
     <button type="submit" class="btn btn-primary mt-3">Save Changes</button>
-    
+
 </form>
 
+<div asp-validation-summary="All" class="text-danger"></div>

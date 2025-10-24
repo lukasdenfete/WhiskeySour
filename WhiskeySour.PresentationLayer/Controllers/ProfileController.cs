@@ -43,7 +43,8 @@ public class ProfileController : Controller
             FirstName = user.FirstName,
             LastName = user.LastName,
             Email = user.UserName,
-            ProfilePicture = user.ProfilePicture
+            ProfilePicture = user.ProfilePicture,
+            UserId = user.Id
         };
         return View(vm);
     }

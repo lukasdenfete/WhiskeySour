@@ -42,7 +42,7 @@
                     <h4 class="mb-3 mt-4">Users</h4>
                     @foreach (var user in Model.Users)
                     {
-                        <a asp-controller="Profile" asp-action="Details" asp-route-id="@user.Id" class="text-decoration-none text-reset">
+                        <a asp-controller="Profile" asp-action="Details" asp-route-id="@user.UserId" class="text-decoration-none text-reset">
                         <div class="card-mb-3 mt-3 border">
                             <div class="row g-0 align-items-center">
                                 <div class="col-4">
