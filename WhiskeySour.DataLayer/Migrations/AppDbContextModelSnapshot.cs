@@ -711,27 +711,27 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.HasOne("WhiskeySour.DataLayer.Comment", "Comment")
                         .WithMany("Notifications")
                         .HasForeignKey("CommentId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("WhiskeySour.DataLayer.User", "FromUser")
                         .WithMany()
                         .HasForeignKey("FromUserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("WhiskeySour.DataLayer.Message", "Message")
                         .WithMany()
                         .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("WhiskeySour.DataLayer.Thread", "Thread")
                         .WithMany("Notifications")
                         .HasForeignKey("ThreadId")
-                        .OnDelete(DeleteBehavior.ClientCascade);
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("WhiskeySour.DataLayer.User", "User")
                         .WithMany()
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Comment");

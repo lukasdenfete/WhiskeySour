@@ -12,8 +12,8 @@ using WhiskeySour.DataLayer;
 namespace WhiskeySour.DataLayer.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250227172305_IdentityFix")]
-    partial class IdentityFix
+    [Migration("20251024065614_InitialAzureSetup")]
+    partial class InitialAzureSetup
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -188,7 +188,7 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.ToTable("UserOrders");
                 });
 
-            modelBuilder.Entity("WhiskeySour.Domain.Category", b =>
+            modelBuilder.Entity("WhiskeySour.DataLayer.Category", b =>
                 {
                     b.Property<int>("CategoryId")
                         .ValueGeneratedOnAdd()
@@ -205,7 +205,182 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("WhiskeySour.Domain.Order", b =>
+            modelBuilder.Entity("WhiskeySour.DataLayer.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("EditedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("Likes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ThreadId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.HasIndex("ThreadId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.CommentLike", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CommentLikes");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Follow", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("FollowedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FolloweeId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FollowerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FolloweeId");
+
+                    b.HasIndex("FollowerId");
+
+                    b.ToTable("Follows");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int?>("CommentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FromUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("MessageId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ThreadId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Type")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("isRead")
+                        .HasColumnType("bit");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CommentId");
+
+                    b.HasIndex("FromUserId");
+
+                    b.HasIndex("MessageId");
+
+                    b.HasIndex("ThreadId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Order", b =>
                 {
                     b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
@@ -230,7 +405,7 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("WhiskeySour.Domain.Product", b =>
+            modelBuilder.Entity("WhiskeySour.DataLayer.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -265,7 +440,43 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("WhiskeySour.Domain.User", b =>
+            modelBuilder.Entity("WhiskeySour.DataLayer.Thread", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("CreatedById")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("EditedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedById");
+
+                    b.ToTable("Threads");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -315,6 +526,9 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<byte[]>("ProfilePicture")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
 
@@ -349,7 +563,7 @@ namespace WhiskeySour.DataLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("WhiskeySour.Domain.User", null)
+                    b.HasOne("WhiskeySour.DataLayer.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -358,7 +572,7 @@ namespace WhiskeySour.DataLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("WhiskeySour.Domain.User", null)
+                    b.HasOne("WhiskeySour.DataLayer.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -373,7 +587,7 @@ namespace WhiskeySour.DataLayer.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WhiskeySour.Domain.User", null)
+                    b.HasOne("WhiskeySour.DataLayer.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -382,7 +596,7 @@ namespace WhiskeySour.DataLayer.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("WhiskeySour.Domain.User", null)
+                    b.HasOne("WhiskeySour.DataLayer.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -391,13 +605,13 @@ namespace WhiskeySour.DataLayer.Migrations
 
             modelBuilder.Entity("OrderProducts", b =>
                 {
-                    b.HasOne("WhiskeySour.Domain.Order", null)
+                    b.HasOne("WhiskeySour.DataLayer.Order", null)
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WhiskeySour.Domain.Product", null)
+                    b.HasOne("WhiskeySour.DataLayer.Product", null)
                         .WithMany()
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -406,22 +620,137 @@ namespace WhiskeySour.DataLayer.Migrations
 
             modelBuilder.Entity("UserOrders", b =>
                 {
-                    b.HasOne("WhiskeySour.Domain.Order", null)
+                    b.HasOne("WhiskeySour.DataLayer.Order", null)
                         .WithMany()
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("WhiskeySour.Domain.User", null)
+                    b.HasOne("WhiskeySour.DataLayer.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WhiskeySour.Domain.Product", b =>
+            modelBuilder.Entity("WhiskeySour.DataLayer.Comment", b =>
                 {
-                    b.HasOne("WhiskeySour.Domain.Category", "Category")
+                    b.HasOne("WhiskeySour.DataLayer.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WhiskeySour.DataLayer.Thread", "Thread")
+                        .WithMany("Comments")
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+
+                    b.Navigation("Thread");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.CommentLike", b =>
+                {
+                    b.HasOne("WhiskeySour.DataLayer.Comment", "Comment")
+                        .WithMany("CommentLikes")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("WhiskeySour.DataLayer.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Follow", b =>
+                {
+                    b.HasOne("WhiskeySour.DataLayer.User", "Followee")
+                        .WithMany()
+                        .HasForeignKey("FolloweeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WhiskeySour.DataLayer.User", "Follower")
+                        .WithMany()
+                        .HasForeignKey("FollowerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Followee");
+
+                    b.Navigation("Follower");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Message", b =>
+                {
+                    b.HasOne("WhiskeySour.DataLayer.User", "Receiver")
+                        .WithMany()
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("WhiskeySour.DataLayer.User", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Notification", b =>
+                {
+                    b.HasOne("WhiskeySour.DataLayer.Comment", "Comment")
+                        .WithMany("Notifications")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WhiskeySour.DataLayer.User", "FromUser")
+                        .WithMany()
+                        .HasForeignKey("FromUserId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WhiskeySour.DataLayer.Message", "Message")
+                        .WithMany()
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WhiskeySour.DataLayer.Thread", "Thread")
+                        .WithMany("Notifications")
+                        .HasForeignKey("ThreadId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("WhiskeySour.DataLayer.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Comment");
+
+                    b.Navigation("FromUser");
+
+                    b.Navigation("Message");
+
+                    b.Navigation("Thread");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Product", b =>
+                {
+                    b.HasOne("WhiskeySour.DataLayer.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -430,9 +759,34 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.Navigation("Category");
                 });
 
-            modelBuilder.Entity("WhiskeySour.Domain.Category", b =>
+            modelBuilder.Entity("WhiskeySour.DataLayer.Thread", b =>
+                {
+                    b.HasOne("WhiskeySour.DataLayer.User", "CreatedBy")
+                        .WithMany()
+                        .HasForeignKey("CreatedById")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CreatedBy");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Category", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Comment", b =>
+                {
+                    b.Navigation("CommentLikes");
+
+                    b.Navigation("Notifications");
+                });
+
+            modelBuilder.Entity("WhiskeySour.DataLayer.Thread", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("Notifications");
                 });
 #pragma warning restore 612, 618
         }

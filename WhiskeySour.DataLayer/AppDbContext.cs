@@ -110,31 +110,31 @@ public class AppDbContext : IdentityDbContext<User>
             .HasOne(n => n.User)
             .WithMany()
             .HasForeignKey(n => n.UserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.FromUser)
             .WithMany()
             .HasForeignKey(n => n.FromUserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Thread)
             .WithMany(t => t.Notifications)
             .HasForeignKey(n => n.ThreadId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Comment)
             .WithMany(c => c.Notifications)
             .HasForeignKey(n => n.CommentId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Restrict);
 
         modelBuilder.Entity<Notification>()
             .HasOne(n => n.Message)
             .WithMany()
             .HasForeignKey(n => n.MessageId)
-            .OnDelete(DeleteBehavior.ClientCascade);
+            .OnDelete(DeleteBehavior.Restrict);
     }
     
     
