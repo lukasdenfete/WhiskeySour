@@ -11,12 +11,6 @@ using WhiskeySour.DataLayer;
 
 namespace WhiskeySour.DataLayer.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-<<<<<<<< HEAD:WhiskeySour.DataLayer/Migrations/20251024065614_InitialAzureSetup.Designer.cs
-    [Migration("20251024065614_InitialAzureSetup")]
-========
-    [Migration("20251023193822_InitialAzureSetup")]
->>>>>>>> main:WhiskeySour.DataLayer/Migrations/20251023193822_InitialAzureSetup.Designer.cs
     partial class InitialAzureSetup
     {
         /// <inheritdoc />
