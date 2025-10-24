@@ -745,6 +745,7 @@ namespace WhiskeySour.DataLayer.Migrations
                     b.Navigation("User");
                 });
 
+
             modelBuilder.Entity("WhiskeySour.DataLayer.Product", b =>
                 {
                     b.HasOne("WhiskeySour.DataLayer.Category", "Category")
