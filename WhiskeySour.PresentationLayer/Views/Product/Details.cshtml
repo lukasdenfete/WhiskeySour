@@ -52,7 +52,7 @@
             @if (User.IsInRole("Admin"))
             {
                 <div class="mt-4">
-                    <a class="btn btn-primary" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.ProductId">Edit Product</a>
+                    <a class="btn btn-dark" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.ProductId">Edit Product</a>
                 </div>
             }
         </div>
