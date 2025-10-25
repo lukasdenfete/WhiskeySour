@@ -70,6 +70,7 @@ public class MessageController : Controller
             SenderName = m.Sender?.FirstName + " " + m.Sender?.LastName,
             ReceiverId = m.ReceiverId,
             ReceiverName = m.Receiver?.FirstName + " " + m.Receiver?.LastName,
+            SenderProfileImage = m.Sender.ProfilePicture,
             Content = m.Content,
             SentAt = m.SentAt,
             IsMine = m.SenderId == user.Id,

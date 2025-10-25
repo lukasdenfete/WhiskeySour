@@ -6,6 +6,7 @@ public class MessageViewModel
     public string SenderName { get; set; }
     public string ReceiverId { get; set; }
     public string ReceiverName { get; set; }
+    public byte[]? SenderProfileImage { get; set; }
     public string Content { get; set; }
     public DateTime SentAt { get; set; }
     public bool IsMine { get; set; }
