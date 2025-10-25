@@ -70,7 +70,7 @@ public class NotificationController : Controller
                     return RedirectToAction("Details", "Forum", new { id = notification.ThreadId });
 
                 case NotificationType.NewMessage:
-                    return RedirectToAction("Conversation", "Message", new { id = notification.MessageId });
+                    return RedirectToAction("Conversation", "Message", new { id = notification.FromUserId });
 
                 case NotificationType.NewFollower:
                     return RedirectToAction("Details", "Profile", new { id = notification.FromUserId });
