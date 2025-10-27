@@ -27,6 +27,6 @@ ASP.NET Core MVC
 
 Entity Framework Core
 
-SQL Server
+Azure SQL Database
 
 HTML, CSS, Bootstrap
