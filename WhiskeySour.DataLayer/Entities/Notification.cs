@@ -8,8 +8,8 @@ public class Notification
     public string UserId { get; set; }
     public User User { get; set; }
     public NotificationType Type { get; set; }
-    public string? FromUserId { get; set; }
-    public User? FromUser { get; set; }
+    public string FromUserId { get; set; }
+    public User FromUser { get; set; }
     public int? ThreadId { get; set; }
     public Thread? Thread { get; set; }
     public int? CommentId { get; set; }

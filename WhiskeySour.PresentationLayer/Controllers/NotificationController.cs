@@ -32,7 +32,7 @@ public class NotificationController : Controller
                 Id = n.Id,
                 Type = n.Type,
                 FromUserId = n.FromUserId,
-                FromUserName = n.FromUser != null ? n.FromUser.FirstName + " " + n.FromUser.LastName : null, 
+                FromUserName = n.FromUser != null ? n.FromUser.FirstName + " " + n.FromUser.LastName : null, //username är mailadress
                 ThreadTitle = n.Thread != null ? n.Thread.Title : null,
                 ThreadId = n.ThreadId,
                 CommentText = n.Comment != null ? n.Comment.Content : null, //Null-kontroller på navigation properties
