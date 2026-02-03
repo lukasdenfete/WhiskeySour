@@ -70,4 +70,21 @@ public class CartController : Controller
         }
         return cart;
     }
+
+    [HttpPost]
+    public async Task<IActionResult> ChangeQuantity(int itemId, int change)
+    {
+        var item = await _context.CartItems.FindAsync(itemId);
+        if (item != null)
+        {
+            item.Quantity += change;
+            if (item.Quantity <= 0)
+            {
+                _context.CartItems.Remove(item);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+        return RedirectToAction("Index");
+    }
 }

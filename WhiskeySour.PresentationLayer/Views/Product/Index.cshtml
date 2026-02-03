@@ -9,10 +9,10 @@
 }
 <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
     @foreach (var productViewModel in Model)
-    {
-        <a asp-controller="Product" asp-action="Details" asp-route-id="@productViewModel.Product.ProductId" class="text-decoration-none text-reset">
-        <div class="col">
-            <div class="card card-hover h-100">
+{
+    <div class="col">
+        <div class="card card-hover h-100">
+            <a asp-controller="Product" asp-action="Details" asp-route-id="@productViewModel.Product.ProductId" class="text-decoration-none text-reset">
                 @if (productViewModel.Product.Image != null)
                 {
                     <img src="data:image/jpeg;base64,@Convert.ToBase64String(productViewModel.Product.Image)" 
@@ -22,7 +22,10 @@
                 {
                     <img src="~/images/placeholder.jpeg" class="card-img-top" alt="No image available"/>
                 }
-                <div class="card-body border-0">
+            </a>
+
+            <div class="card-body border-0 d-flex flex-column">
+                <a asp-controller="Product" asp-action="Details" asp-route-id="@productViewModel.Product.ProductId" class="text-decoration-none text-reset flex-grow-1">
                     <h5 class="card-title">@productViewModel.Product.Name</h5>
                     <p class="card-text">@productViewModel.Product.Description</p>
                     <p class="card-text"><strong>@productViewModel.Product.Price.ToString("C")</strong></p>
@@ -40,17 +43,29 @@
                             <span class="badge bg-danger">Out of Stock</span>
                         }
                     </p>
-                    <form asp-controller="Cart" asp-action="Add" method="post">
-                        <input type="hidden" name="productId" value="@productViewModel.Product.ProductId" /> <button type="submit" class="btn btn-dark">
-                            Add to cart
-                        </button>
-                    </form>
-                </div>
+                </a>
                 
+                <div class="mt-2">
+                    @if (productViewModel.Product.Quantity > 0)
+                    {
+                        <form asp-controller="Cart" asp-action="Add" method="post">
+                            <input type="hidden" name="productId" value="@productViewModel.Product.ProductId" /> 
+                            <button type="submit" class="btn btn-dark w-100">
+                                Add to cart
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary w-100" disabled>
+                            Out of Stock
+                        </button>
+                    }
+                </div>
             </div>
         </div>
-        </a>
-    }
+    </div>
+}
 </div>
 
 

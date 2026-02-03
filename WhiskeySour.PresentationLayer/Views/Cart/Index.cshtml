@@ -38,7 +38,23 @@
                                             <strong>@item.Product.Name</strong>
                                             </td>
                                         <td class="align-middle text-center">
-                                            @item.Quantity
+                                            <div class="d-flex justify-content-center align-items-center gap-2">
+        
+                                                <form asp-action="ChangeQuantity" asp-controller="Cart" method="post">
+                                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                                    <input type="hidden" name="change" value="-1" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary" style="width: 30px;">-</button>
+                                                </form>
+
+                                                <span class="fw-bold">@item.Quantity</span>
+
+                                                <form asp-action="ChangeQuantity" asp-controller="Cart" method="post">
+                                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                                    <input type="hidden" name="change" value="1" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary" style="width: 30px;">+</button>
+                                                </form>
+
+                                            </div>
                                         </td>
                                         <td class="align-middle text-end">
                                             @item.Product.Price.ToString("C")
