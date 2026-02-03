@@ -25,7 +25,7 @@
                 <div class="card-body border-0">
                     <h5 class="card-title">@productViewModel.Product.Name</h5>
                     <p class="card-text">@productViewModel.Product.Description</p>
-                    <p class="card-text"><strong>@productViewModel.Product.Price $</strong></p>
+                    <p class="card-text"><strong>@productViewModel.Product.Price.ToString("C")</strong></p>
                     <p class="card-text">
                         @if (productViewModel.Product.Quantity >= 3)
                         {
@@ -40,6 +40,11 @@
                             <span class="badge bg-danger">Out of Stock</span>
                         }
                     </p>
+                    <form asp-controller="Cart" asp-action="Add" method="post">
+                        <input type="hidden" name="productId" value="@productViewModel.Product.ProductId" /> <button type="submit" class="btn btn-dark">
+                            Add to cart
+                        </button>
+                    </form>
                 </div>
                 
             </div>

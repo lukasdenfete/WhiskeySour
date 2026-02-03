@@ -1,0 +1,89 @@
+@model WhiskeySour.DataLayer.Cart
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+    var totalSum = Model.Items.Sum(x => x.Quantity * x.Product.Price);
+}
+
+<div class="container my-5">
+    <h2 class="mb-4">Your shopping cart</h2>
+
+    @if (!Model.Items.Any())
+    {
+        <div class="alert alert-info">
+            Your shopping cart is empty. 
+            <a asp-controller="Product" asp-action="Index" class="alert-link">Keep shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-center">Amount</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-end">Total</th>
+                                    <th></th> </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <strong>@item.Product.Name</strong>
+                                            </td>
+                                        <td class="align-middle text-center">
+                                            @item.Quantity
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            @item.Product.Price.ToString("C")
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            @((item.Quantity * item.Product.Price).ToString("C"))
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            <form asp-action="Remove" asp-controller="Cart" method="post">
+                                                <input type="hidden" name="itemId" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Total:</span>
+                            <strong>@totalSum.ToString("C")</strong>
+                        </div>
+                        <hr />
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-primary btn-lg" disabled>
+                                Continue to checkout
+                            </button>
+                            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
+                                Keep shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

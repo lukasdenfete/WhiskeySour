@@ -15,6 +15,8 @@ public class AppDbContext : IdentityDbContext<User>
     public DbSet<Message> Messages { get; set; }
     public DbSet<Follow> Follows { get; set; }
     public DbSet<Notification> Notifications { get; set; }
+    public DbSet<Cart> Carts { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
