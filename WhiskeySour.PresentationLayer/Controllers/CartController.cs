@@ -22,6 +22,23 @@ public class CartController : Controller
         var cart = await GetOrCreateCartAsync(user);
         return View(cart);
     }
+    public async Task<IActionResult> Checkout()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var cart = await GetOrCreateCartAsync(userId);
+        var currentUser = await _context.Users.FindAsync(userId);
+        if (!cart.Items.Any())
+        {
+            return RedirectToAction("Index");
+        }
+
+        if (currentUser != null)
+        {
+            ViewBag.FirstName = currentUser.FirstName;
+            ViewBag.LastName = currentUser.LastName;
+        }
+        return View(cart);
+    }
     [HttpPost]
     public async Task<IActionResult> Add(int productId, int quantity = 1)
     {

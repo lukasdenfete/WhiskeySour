@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "Shopping Cart";
-    var totalSum = Model.Items.Sum(x => x.Quantity * x.Product.Price);
 }
 
 <div class="container my-5">
@@ -86,13 +85,13 @@
                     <div class="card-body">
                         <div class="d-flex justify-content-between mb-3">
                             <span>Total:</span>
-                            <strong>@totalSum.ToString("C")</strong>
+                            <strong>@Model.TotalPrice.ToString("C")</strong>
                         </div>
                         <hr />
                         <div class="d-grid gap-2">
-                            <button class="btn btn-primary btn-lg" disabled>
-                                Continue to checkout
-                            </button>
+                                <a asp-controller="Cart" asp-action="Checkout" class="btn btn-primary btn-lg">
+                                    Continue to checkout
+                                </a>
                             <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
                                 Keep shopping
                             </a>
