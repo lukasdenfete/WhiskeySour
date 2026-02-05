@@ -16,9 +16,11 @@
 
     @if (!Model.Items.Any())
     {
-        <div class="alert alert-info">
-            Your shopping cart is empty. 
-            <a asp-controller="Product" asp-action="Index" class="alert-link">Keep shopping</a>
+        <div class="text-center py-5 bg-light rounded-3">
+            <i class="bi bi-cart3 fs-1 text-muted mb-3"></i>
+            <h3>Your shopping cart is empty.</h3>
+            <p class="text-muted">Once you place a product in your cart, it will show up here.</p>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-dark mt-3">Start Shopping</a>
         </div>
     }
     else
