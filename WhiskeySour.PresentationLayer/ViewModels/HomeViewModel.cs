@@ -1,14 +1,14 @@
 using WhiskeySour.DataLayer;
-using ThreadEntity = WhiskeySour.DataLayer.Thread;
+using Thread = System.Threading.Thread; // Eller ditt namespace för entiteter
 
 namespace WhiskeySour.Web.ViewModels;
 
 public class HomeViewModel
 {
-    public List<ThreadEntity> RecentThreads { get; set; }
-    public List<ThreadEntity> PopularThreads { get; set; }
-    public List<ThreadEntity> FollowerThreads { get; set; }
-    public List<User> RecentUsers { get; set; }
-    public List<User> RecommendedUsers { get; set; }
-    public List<Product> RecentProducts { get; set; }
+    public List<Product> LatestProducts { get; set; } = new List<Product>();
+    public List<WhiskeySour.DataLayer.Thread> LatestThreads { get; set; } = new List<WhiskeySour.DataLayer.Thread>();
+    public List<User> NewUsers { get; set; } = new List<User>();
+    // Inlägg från de man följer (Om inloggad)
+    public List<WhiskeySour.DataLayer.Thread> Feed { get; set; } = new List<WhiskeySour.DataLayer.Thread>();
+    public bool IsLoggedIn { get; set; }
 }

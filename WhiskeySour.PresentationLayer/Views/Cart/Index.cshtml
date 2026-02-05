@@ -1,0 +1,115 @@
+@model WhiskeySour.DataLayer.Cart
+
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="container my-5">
+    <h2 class="mb-4">Your shopping cart</h2>
+
+    @if (!Model.Items.Any())
+    {
+        <div class="text-center py-5 bg-light rounded-3">
+            <i class="bi bi-cart3 fs-1 text-muted mb-3"></i>
+            <h3>Your shopping cart is empty.</h3>
+            <p class="text-muted">Once you place a product in your cart, it will show up here.</p>
+            <a asp-controller="Product" asp-action="Index" class="btn btn-dark mt-3">Start Shopping</a>
+        </div>
+    }
+    else
+    {
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card shadow-sm">
+                    <div class="card-body p-0">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Product</th>
+                                    <th class="text-center">Amount</th>
+                                    <th class="text-end">Price</th>
+                                    <th class="text-end">Total</th>
+                                    <th></th> </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model.Items)
+                                {
+                                    <tr>
+                                        <td class="align-middle">
+                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Product.ProductId" class="text-decoration-none text-reset">
+                                            <strong>@item.Product.Name</strong>
+                                            </a>
+                                            </td>
+                                        <td class="align-middle text-center">
+                                            <div class="d-flex justify-content-center align-items-center gap-2">
+        
+                                                <form asp-action="ChangeQuantity" asp-controller="Cart" method="post">
+                                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                                    <input type="hidden" name="change" value="-1" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary" style="width: 30px;">-</button>
+                                                </form>
+
+                                                <span class="fw-bold">@item.Quantity</span>
+
+                                                <form asp-action="ChangeQuantity" asp-controller="Cart" method="post">
+                                                    <input type="hidden" name="itemId" value="@item.Id" />
+                                                    <input type="hidden" name="change" value="1" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-secondary" style="width: 30px;">+</button>
+                                                </form>
+
+                                            </div>
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            @item.Product.Price.ToString("C")
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            @((item.Quantity * item.Product.Price).ToString("C"))
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            <form asp-action="Remove" asp-controller="Cart" method="post">
+                                                <input type="hidden" name="itemId" value="@item.Id" />
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                    Remove
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">Summary</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Total:</span>
+                            <strong>@Model.TotalPrice.ToString("C")</strong>
+                        </div>
+                        <hr />
+                        <div class="d-grid gap-2">
+                                <a asp-controller="Cart" asp-action="Checkout" class="btn btn-dark btn-lg">
+                                    Continue to checkout
+                                </a>
+                            <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
+                                Keep shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

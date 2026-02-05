@@ -1,0 +1,46 @@
+@model WhiskeySour.Web.ViewModels.OrderViewModel
+
+<div class="container mt-5">
+    <div class="alert alert-success text-center">
+        <h2>Thank you for your order!</h2>
+        <p>Order #@Model.OrderId has been placed.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Shipping Details</h4>
+            <p>
+                <strong>@Model.CustomerName</strong><br/>
+                @Model.Address<br/>
+                @Model.City
+            </p>
+            <p class="text-muted">Date: @Model.OrderDate</p>
+        </div>
+        
+        <div class="col-md-6">
+            <h4>Order Summary</h4>
+            <ul class="list-group mb-3">
+                @foreach (var item in Model.Items)
+                {
+                    <li class="list-group-item d-flex justify-content-between lh-sm">
+                        <div class="d-flex align-items-center">
+                            <div>
+                                <h6 class="my-0">@item.ProductName</h6>
+                                <small class="text-muted">@item.Quantity x @item.Price.ToString("C")</small>
+                            </div>
+                        </div>
+                        <span class="text-muted">@item.RowTotal.ToString("C")</span>
+                    </li>
+                }
+                <li class="list-group-item d-flex justify-content-between">
+                    <span>Total</span>
+                    <strong>@Model.TotalPrice.ToString("C")</strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="text-center mt-4">
+        <a asp-controller="Product" asp-action="Index" class="btn btn-dark">Continue Shopping</a>
+    </div>
+</div>

@@ -1,93 +1,172 @@
 @using WhiskeySour.Web.ViewModels
 @model WhiskeySour.Web.ViewModels.ProductViewModel
-
-
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>Product Details</h2>
-        <a class="btn btn-secondary" asp-controller="Product" asp-action="Index">Back to Products</a>
-    </div>
-    <div class="row">
-        <div class="col-md-5 text-center">
-            @if (Model.Product.Image != null && Model.Product.Image.Length > 0)
-            {
-                <img src="data:image/png;base64,@Convert.ToBase64String(Model.Product.Image)"
-                     alt="Image of @Model.Product.Name"
-                     class="img-fluid rounded shadow-sm"
-                     style="max-height: 400px; border: 1px solid #ddd; padding: 10px"/>
-            }
-            else
-            {
-                <p>No image available for this product</p>
-            }
+<div class="container mb-3">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
-        <div class="col-md-7">
-            <h3 class="text-secondary">@Model.Product.Name</h3>
-            <p class="text-muted">@Model.Product.Description</p>
-            <hr/>
-            <dl class="row">
-                <dt class="col-sm-4">Price:</dt>
-                <dd class="col-sm-8"><strong>@Model.Product.Price $</strong></dd>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+</div>
+<div class="container mt-5">
+    <div class="d-flex justify-content-end align-items-center mb-4">
+        
+        <a class="btn btn-outline-secondary btn-sm" asp-controller="Product" asp-action="Index">
+            Back to Products
+        </a>
+        
+        @if (User.IsInRole("Admin"))
+        {
+                <a class="btn btn-outline-secondary btn-sm m-3" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.ProductId">
+                    <i class="bi bi-pencil"></i> Edit Product
+                </a>
+        }
+    </div>
+
+    <div class="row g-5"> 
+        <div class="col-md-4">
+            <div class="bg-light rounded-3 shadow-sm d-flex align-items-center justify-content-center p-3" style="height: 350px;">
+                @if (Model.Product.Image != null && Model.Product.Image.Length > 0)
+                {
+                    <img src="data:image/png;base64,@Convert.ToBase64String(Model.Product.Image)"
+                         alt="Image of @Model.Product.Name"
+                         class="img-fluid"
+                         style="max-height: 100%; object-fit: contain;" /> 
+                }
+                else
+                {
+                    <div class="text-center text-muted">
+                        <i class="bi bi-camera fs-1 d-block mb-2"></i>
+                        No image available
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-md-8 d-flex flex-column h-100">
+            
+            <div>
+                <h6 class="fw-bold text-uppercase small mb-1">@Model.Product.Category.Name</h6>
+                <h1 class="display-6 fw-bold mb-3">@Model.Product.Name</h1>
+            </div>
+            
+            <p class="text-muted mb-4 flex-grow-1">@Model.Product.Description</p>
+
+            <div class="d-flex justify-content-between align-items-end mt-auto pt-3">
                 
-                <dt class="col-sm-4">Stock</dt>
-                <dd class="col-sm-8">
-                    @if (Model.Product.Quantity > 3)
-                    {
-                        <span class="badge bg-success">In Stock</span>
-                        <span>(@Model.Product.Quantity left)</span>
-                    } else if (Model.Product.Quantity == 0)
-                    {
-                        <span class="badge bg-danger">Out of Stock</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-warning">Few Left</span>
-                        <span>(@Model.Product.Quantity left)</span>
-                    }
-                </dd>
-                
-                <dt class="col-sm-4">Category:</dt>
-                <dd class="col-sm-8">@Model.Product.Category.Name</dd>
-            </dl>
-            @if (User.IsInRole("Admin"))
+                <h2 class="fw-bold mb-0">@Model.Product.Price.ToString("C")</h2>
+
+                <div class="d-flex flex-column align-items-end gap-2">
+                    
+                    <div class="small">
+                        @if (Model.Product.Quantity > 3)
+                        {
+                            <span class="text-success fw-bold"><i class="bi bi-check-circle-fill me-1"></i> In Stock (@Model.Product.Quantity)</span>
+                        } 
+                        else if (Model.Product.Quantity == 0)
+                        {
+                            <span class="text-danger fw-bold"><i class="bi bi-x-circle-fill me-1"></i> Out of Stock</span>
+                        }
+                        else
+                        {
+                            <span class="text-warning fw-bold"><i class="bi bi-exclamation-circle-fill me-1"></i> Few Left (@Model.Product.Quantity)</span>
+                        }
+                    </div>
+
+                    <div>
+                        @if (Model.Product.Quantity > 0)
+                        {
+                            <form asp-controller="Cart" asp-action="Add" method="post">
+                                <input type="hidden" name="productId" value="@Model.Product.ProductId" />
+                                
+                                <div class="input-group">
+                                    <input type="number" id="quantity" name="quantity" class="form-control text-center border-secondary" value="1" min="1" max="@Model.Product.Quantity" style="width: 70px;" />
+                                    <button type="submit" class="btn btn-dark px-4">Add to Cart</button>
+                                </div>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5 mb-5">
+        <h3 class="mb-4">Related products</h3>
+        
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-3">
+            @foreach (var related in Model.ProductsNavigation)
             {
-                <div class="mt-4">
-                    <a class="btn btn-dark" asp-controller="Product" asp-action="Edit" asp-route-id="@Model.Product.ProductId">Edit Product</a>
+                <div class="col">
+                    <div class="card card-hover h-100 shadow-sm border-0">
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@related.ProductId" class="text-decoration-none text-reset">
+                            <div style="position: relative;">
+                                @if (related.Image != null)
+                                {
+                                    <img src="data:image/png;base64,@Convert.ToBase64String(related.Image)"
+                                         class="card-img-top"
+                                         alt="@related.Name"
+                                         style="height: 180px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <img src="~/images/placeholder.jpeg" 
+                                         class="card-img-top" 
+                                         style="height: 180px; object-fit: cover;" alt="Placeholder" />
+                                }
+                                
+                                <div style="position: absolute; top: 10px; right: 10px;">
+                                    @if (related.Quantity == 0)
+                                    {
+                                        <span class="badge bg-danger shadow-sm">Out of Stock</span>
+                                    }
+                                </div>
+                            </div>
+                        </a>
+
+                        <div class="card-body d-flex flex-column p-3">
+                            <a asp-controller="Product" asp-action="Details" asp-route-id="@related.ProductId" class="text-decoration-none text-reset">
+                                <h6 class="card-title fw-bold mb-1 text-truncate" title="@related.Name">
+                                    @related.Name
+                                </h6>
+                                <p class="card-text text-muted small text-truncate mb-2">
+                                    @related.Description
+                                </p>
+                            </a>
+                            
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                 <span class="fw-bold">
+                                    @related.Price.ToString("C")
+                                 </span>
+
+                                 @if (related.Quantity > 0)
+                                 {
+                                     <form asp-controller="Cart" asp-action="Add" method="post">
+                                         <input type="hidden" name="productId" value="@related.ProductId" />
+                                         <button type="submit" class="btn btn-outline-dark btn-sm" title="Add to cart">
+                                             <i class="bi bi-cart-plus fs-5"></i>
+                                         </button>
+                                     </form>
+                                 }
+                                 else
+                                 {
+                                     <button class="btn btn-light text-muted border-0 btn-sm" disabled>
+                                         <i class="bi bi-cart-x fs-5"></i>
+                                     </button>
+                                 }
+                            </div>
+                        </div>
+                    </div>
                 </div>
             }
         </div>
     </div>
 </div>
-
-<div class="mt-5">
-    <h5>Related Products</h5>
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    @foreach (var relatedProduct in Model.ProductsNavigation)
-    {
-        <div class="col">
-            <div class="card h-100">
-                <a asp-controller="Product" asp-action="Details" asp-route-id="@relatedProduct.ProductId" class="text-decoration-none text-reset">
-                   @if(relatedProduct.Image != null) {
-                    <img src="data:image/png;base64,@Convert.ToBase64String(relatedProduct.Image)"
-                         alt="@relatedProduct.Name"
-                         class="card-img-top"
-                         style="height: 150px; object-fit: cover"/>
-                    }
-                   else
-                   {
-                       <img src="images/placeholder.jpeg" alt="Placeholder image" 
-                            class="card-img-top" style="height: 150px; object-fit: cover;"/>
-                   }
-                    <div class="card-body">
-                        <h6 class="card-title">@relatedProduct.Name</h6>
-                        <p class="card-text">@relatedProduct.Price $</p>
-                    </div>
-                </a>
-
-            </div>
-        </div>
-    }
-    </div>
-</div>
-
-
