@@ -45,7 +45,22 @@ public class CartController : Controller
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var cart = await GetOrCreateCartAsync(userId);
         
+        var product = await _context.Products.FindAsync(productId);
+        if(product == null) return NotFound();
+        
         var existingItem = cart.Items.FirstOrDefault(i => i.ProductId == productId);
+        var quantityInCart = existingItem?.Quantity ?? 0;
+        var newQuantity = quantity + quantityInCart;
+        //för att redirecta tillbaka dit man kom från
+        string refererUrl = Request.Headers["Referer"].ToString();
+
+        if (newQuantity > product.Quantity)
+        {
+            TempData["Error"] = $"No more {product.Name} left in stock.";
+            //Redirect tillbaka dit man kom från
+            return Redirect(refererUrl);
+        }
+        
         if (existingItem != null)
         {
             existingItem.Quantity += quantity;
@@ -59,7 +74,8 @@ public class CartController : Controller
             });
         }
         await _context.SaveChangesAsync();
-        return RedirectToAction("Index");
+        TempData["Success"] = $"{product.Name} added to cart!";
+        return Redirect(refererUrl);
     }
 
     [HttpPost]

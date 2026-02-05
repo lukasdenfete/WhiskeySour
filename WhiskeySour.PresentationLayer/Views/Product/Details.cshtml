@@ -1,6 +1,21 @@
 @using WhiskeySour.Web.ViewModels
 @model WhiskeySour.Web.ViewModels.ProductViewModel
-
+<div class="container mb-3">
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+</div>
 <div class="container mt-5">
     <div class="d-flex justify-content-end align-items-center mb-4">
         
