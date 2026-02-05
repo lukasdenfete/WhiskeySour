@@ -1,6 +1,64 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Integritetspolicy";
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="text-center mb-5">
+    <h1 class="display-4">@ViewData["Title"]</h1>
+    <p class="lead text-muted">Dina hemligheter är säkra hos oss (tror jag).</p>
+</div>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        
+        <p>
+            Senast uppdaterad: <strong>@DateTime.Now.ToString("yyyy-MM-dd")</strong>
+        </p>
+
+        <h3>1. Inledning</h3>
+        <p>
+            Välkommen till vår webbplats. Vi på <em>Whiskey Sour</em> värnar om din personliga integritet och strävar efter att alltid skydda dina personuppgifter på bästa sätt. Denna policy förklarar vilken typ av information vi samlar in och hur vi använder den – helt utan juridisk jargong (nästan).
+        </p>
+
+        <hr class="my-4" />
+
+        <h3>2. Information vi samlar in</h3>
+        <p>Vi samlar in information för att kunna tillhandahålla bättre tjänster till alla våra användare. Detta inkluderar:</p>
+        <ul>
+            <li><strong>Information du ger oss:</strong> Om du fyller i ett formulär, skapar ett konto eller skickar en arg lapp via e-post.</li>
+            <li><strong>Information vi får genom din användning:</strong> Vi loggar teknisk data som IP-adress, webbläsartyp och operativsystem. Mest för att se till att sidan inte kraschar.</li>
+        </ul>
+
+        <h3>3. Cookies (Kakor)</h3>
+        <p>
+            Ja, vi använder cookies. Inte den goda sorten med chokladbitar, utan små textfiler som sparas på din dator. De hjälper oss att komma ihåg dina inställningar och analysera trafiken.
+        </p>
+        <div class="alert alert-info">
+            Genom att använda vår webbplats godkänner du att vi strösslar lite digitala smulor i din webbläsare.
+        </div>
+
+        <h3>4. Hur vi använder informationen</h3>
+        <p>Vi använder datan för:</p>
+        <ul>
+            <li>Skojs skull.</li>
+        </ul>
+
+        <h3>5. Dina rättigheter (GDPR och sånt)</h3>
+        <p>
+            Du har rätt att begära utdrag av den information vi har om dig, och du har rätt att be oss glömma bort dig helt (rätten att bli bortglömd). Kontakta oss så löser vi det inte.
+        </p>
+
+        <hr class="my-4" />
+
+        <h3>6. Kontakta oss</h3>
+        <p>
+            Har du frågor om denna policy eller undrar varför vi samlar in data? Tveka inte att höra av dig. Vi kommer inte att svara, men du är alltid välkommen att höra av dig.
+        </p>
+        <address>
+            <strong>Supporten</strong><br>
+            <a href="mailto:privacy@whiskeysour.se">privacy@whiskeysour.se</a><br>
+            Fejkgatan 12<br>
+            123 45 Staden
+        </address>
+
+    </div>
+</div>
