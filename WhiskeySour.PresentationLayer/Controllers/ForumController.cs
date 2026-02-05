@@ -84,6 +84,7 @@ public class ForumController : Controller
         return RedirectToAction("Details", new { id = model.ThreadId });
     }
 
+    [Authorize]
     public IActionResult Create()
     {
         var model = new CreateThreadViewModel();
@@ -161,6 +162,7 @@ public class ForumController : Controller
             Created = thread.Created,
             ThreadImage = thread.Image,
             EditedAt = thread.EditedAt,
+            CreatedByProfilePicture = thread.CreatedBy?.ProfilePicture,
             Comments = thread.Comments.Select(c => new CommentViewModel
             {
                 Content = c.Content,

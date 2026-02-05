@@ -1,37 +1,63 @@
 @model WhiskeySour.Web.ViewModels.EditCommentViewModel
 
 @{
-    ViewData["Title"] = "Edit Comment";}
-<h2>Edit Comment</h2>
+    ViewData["Title"] = "Edit Comment";
+}
 
-<form asp-action="EditComment" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
-    <input type="hidden" asp-for="CommentId" />
-    <input type="hidden" asp-for="ThreadId" />
-
-    <div class="form-group mb-3">
-        <label asp-for="Content" class="form-label"></label>
-        <textarea asp-for="Content" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
-    </div>
-
-    <div class="form-group mb-3">
-        <label asp-for="ImageFile" class="form-label">Upload image</label>
-        <input asp-for="ImageFile" type="file" class="form-control" />
-    </div>
-
-    @if (Model.ExistingImage != null)
-    {
-        <div class="mb-3">
-            <p>Current image:</p>
-            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ExistingImage)" class="img-fluid mb-2" style="max-height: 200px;" />
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
             
-        </div>
-    }
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <h2 class="fw-bold mb-4">Edit Comment</h2>
 
-    <button type="submit" class="btn btn-dark">Save changes</button>
-    <a asp-action="Details" asp-route-id="@Model.ThreadId" class="btn btn-dark ms-2">Cancel</a>
-</form>
+                    <form asp-action="EditComment" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="CommentId" />
+                        <input type="hidden" asp-for="ThreadId" />
+
+                        <div class="mb-3">
+                            <label asp-for="Content" class="form-label fw-bold">Comment</label>
+                            <textarea asp-for="Content" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Content" class="text-danger small"></span>
+                        </div>
+
+                        @if (Model.ExistingImage != null)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label fw-bold d-block">Current Image</label>
+                                <div class="p-2 border rounded bg-light text-center">
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ExistingImage)" 
+                                         class="img-fluid rounded" style="max-height: 150px;" />
+                                    <div class="text-muted small mt-1">Attached image</div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="mb-4">
+                            <label asp-for="ImageFile" class="form-label fw-bold">
+                                @(Model.ExistingImage != null ? "Replace Image" : "Upload Image")
+                                <span class="text-muted fw-normal small">(Optional)</span>
+                            </label>
+                            <input asp-for="ImageFile" type="file" class="form-control" />
+                        </div>
+
+                        <div class="d-flex justify-content-end align-items-center gap-2">
+                            <a asp-action="Details" asp-route-id="@Model.ThreadId" class="text-decoration-none text-muted me-2">Cancel</a>
+                            
+                            <button type="submit" class="btn btn-dark px-4 rounded-pill fw-bold">
+                                <i class="bi bi-check-lg me-1"></i> Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

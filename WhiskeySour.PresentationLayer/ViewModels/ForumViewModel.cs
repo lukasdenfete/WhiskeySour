@@ -18,4 +18,5 @@ public class ForumViewModel
     public byte[]? ThreadImage { get; set; } // Visning av trådbild
     public DateTime? EditedAt { get; set; }
     public bool IsEdited => EditedAt.HasValue;
+    public byte[]? CreatedByProfilePicture { get; set; }
 }

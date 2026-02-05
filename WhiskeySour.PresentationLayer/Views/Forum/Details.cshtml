@@ -1,127 +1,244 @@
 @using System.Security.Claims
-@using Microsoft.AspNetCore.Mvc.TagHelpers
 @model WhiskeySour.Web.ViewModels.ForumViewModel
 
-<div class="d-flex justify-content-end mb-3">
-    <a asp-controller="Forum" asp-action="Index" class="btn btn-dark">
-        Back to forum
-    </a>
-</div>
-<h2>@Model.ThreadTitle</h2>
-<p class="mb-2">
-    <strong>Created by:</strong> @Model.CreatedByName on @Model.Created.ToString("yyyy-MM-dd HH:mm")
-    @if (Model.IsEdited)
-    {
-        <span class="ms-2 text-muted">(Edited: @Model.EditedAt?.ToString("yyyy-MM-dd HH:mm"))</span>
-    }
-</p>
-<p>@Model.ThreadContent</p>
-
-@if (Model.ThreadImage != null)
-{
-    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ThreadImage)" class="img-fluid mb-3" style="max-height: 200px;" />
+@{
+    ViewData["Title"] = Model.ThreadTitle;
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 }
 
-<div class="d-flex justify-content-end gap-2">
-    @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.CreatedById)
-    {
-        <a asp-controller="Forum" asp-action="Edit" asp-route-id="@Model.ThreadId" class="btn btn-dark">Edit Thread</a>
-    }
-    @if (User.FindFirstValue(ClaimTypes.NameIdentifier) == Model.CreatedById || User.IsInRole("Admin"))
-    {
-        <form asp-action="DeleteThread" method="post" class="mt-0"
-              onsubmit="return confirm('Are you sure you want to delete this thread?');">
-            <input type="hidden" name="id" value="@Model.ThreadId"/>
-            <button type="submit" class="btn btn-danger">Delete thread</button>
-        </form>
-    }
-</div>
+<div class="container py-5">
 
+    <div class="mb-4">
+        <a asp-controller="Forum" asp-action="Index" class="btn btn-outline-dark rounded-pill px-4">
+            <i class="bi bi-arrow-left me-2"></i>Back to forum
+        </a>
+    </div>
 
-<h6>Comments</h6>
-@if (Model.Comments != null && Model.Comments.Any())
-{
-    <ul class="list-group mb-4">
-        @foreach (var comment in Model.Comments)
-        {
-            <li class="list-group-item">
-                
-                <div>
-                    <p>@comment.Content</p>
-                    @if (comment.Image != null)
-                    {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(comment.Image)" class="img-fluid mb-2" style="max-height: 200px;"/>
-                    }
-                   
-                    <div class="d-flex justify-content-between align-items-center mt-2">
-                        <small class="text-muted d-flex align-items-center">
-                            <a asp-controller="Profile" asp-action="Details" asp-route-id="@comment.CreatedById">
-                            @if (comment.ProfilePicture != null)
+    <div class="card shadow-sm border-0 mb-5">
+        <div class="card-body p-4 p-md-5">
+            
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div class="d-flex align-items-center gap-3">
+                    <a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.CreatedById">
+                        @if (Model.CreatedByProfilePicture != null)
+                        {
+                            <img src="data:image/png;base64,@Convert.ToBase64String(Model.CreatedByProfilePicture)" 
+                                 class="rounded-circle border" style="width: 50px; height: 50px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <img src="/images/default-profilbild.png" class="rounded-circle border" style="width: 50px; height: 50px; object-fit: cover;" />
+                        }
+                    </a>
+                    
+                    <div>
+                        <h6 class="fw-bold mb-0">@Model.CreatedByName</h6>
+                        <small class="text-muted">
+                            @Model.Created.ToString("yyyy-MM-dd HH:mm")
+                            @if (Model.IsEdited)
                             {
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(comment.ProfilePicture)"
-                                     class="rounded-circle me-2"
-                                     style="width:30px;height:30px;object-fit:cover;"/>
+                                <span class="fst-italic ms-1">(Edited: @Model.EditedAt?.ToString("yyyy-MM-dd HH:mm"))</span>
                             }
-                            else
-                            {
-                                <img src="~/images/default-profilbild.png"
-                                     class="rounded-circle me-2"
-                                     style="width:30px;height:30px;object-fit:cover;"/>
-                            }
-                            </a>
-                            @comment.CreatedByName @comment.Created.ToString("yyyy-MM-dd HH:mm")
-                            @if (comment.IsEdited)
-                            {
-                                <span class="ms-2">(Edited: @comment.EditedAt?.ToString("yyyy-MM-dd HH:mm"))</span>
-                            }
-                            <span class="ms-5">@comment.Likes @((comment.Likes == 1) ? "like" : "likes")</span> @* om 1 == true är det like, annars likes *@
-                            <form asp-action="LikeComment" method="post">
-                                <input type="hidden" name="commentId" value="@comment.CommentId"/>
-                                <button type="submit" class="btn btn-sm @(comment.HasLiked ? "btn-primary" : "btn-outline-primary") ms-2">
-                                    @(comment.HasLiked ? "👎" : "👍")
-                                </button>
-                            </form>
                         </small>
-                        <div class="d-flex gap-2 mt-2">
-                            @if (comment.CreatedById == User.FindFirstValue(ClaimTypes.NameIdentifier))
-                            {
-                                <a asp-controller="Forum" asp-action="EditComment" asp-route-id="@comment.CommentId"
-                                   class="btn btn-outline-dark btn-sm">Edit</a>
-                            }
-                            @if (comment.CreatedById == User.FindFirstValue(ClaimTypes.NameIdentifier) || User.IsInRole("Admin"))
-                            {
-                                <form asp-controller="Forum" asp-action="DeleteComment" method="post" style="display:inline;"
-                                      onsubmit="return confirm('Are you sure you want to delete this comment?');">
-                                    <input type="hidden" name="id" value="@comment.CommentId"/>
-                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
-                                </form>
-                            }
-                        </div>
                     </div>
                 </div>
-            </li>
-        }
-    </ul>
-}
-else
-{
-    <p class="text-muted">Be the first to comment in this thread</p>
-}
 
-<form asp-action="AddComment" method="post" enctype="multipart/form-data">
-    <input type="hidden" name="ThreadId" value="@Model.ThreadId"/>
-    <div class="form-group">
-        <label for="Content">Add comment:</label>
-        <textarea name="Content" class="form-control" rows="3"></textarea>
-        <span asp-validation-for="NewComment.Content" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label for="ImageFile">Add image to your comment (optional)</label>
-        <input type="file" name="ImageFile" class="form-control"/>
-    </div>
-    <button type="submit" class="btn btn-dark mt-2">Post Comment </button>
-</form>
+                @if (currentUserId == Model.CreatedById || User.IsInRole("Admin"))
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-light btn-sm rounded-circle" type="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-three-dots-vertical"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                            @if (currentUserId == Model.CreatedById)
+                            {
+                                <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@Model.ThreadId"><i class="bi bi-pencil me-2"></i>Edit Thread</a></li>
+                            }
+                            <li>
+                                <form asp-action="DeleteThread" method="post" onsubmit="return confirm('Delete this thread?');">
+                                    <input type="hidden" name="id" value="@Model.ThreadId"/>
+                                    <button type="submit" class="dropdown-item text-danger"><i class="bi bi-trash me-2"></i>Delete Thread</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
+            </div>
 
+            <h2 class="fw-bold mb-3">@Model.ThreadTitle</h2>
+            
+            <div class="row g-4">
+                <div class="@(Model.ThreadImage != null ? "col-lg-8" : "col-12")">
+                    <div class="text-break" style="font-size: 1.1rem; line-height: 1.6;">
+                        @Model.ThreadContent
+                    </div>
+                </div>
+
+                @if (Model.ThreadImage != null)
+                {
+                    <div class="col-lg-4">
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ThreadImage)" 
+                                 class="w-100" 
+                                 style="object-fit: contain; max-height: 300px;" />
+                    </div>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <h4 class="fw-bold mb-4">Comments (@(Model.Comments?.Count ?? 0))</h4>
+
+            @if (Model.Comments != null && Model.Comments.Any())
+            {
+                <div class="d-flex flex-column gap-3 mb-5">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        <div class="bg-white p-4 rounded-3 shadow-sm border-0 d-flex gap-3">
+                            
+                            <div class="flex-shrink-0">
+                                <a asp-controller="Profile" asp-action="Details" asp-route-id="@comment.CreatedById">
+                                    @if (comment.ProfilePicture != null)
+                                    {
+                                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(comment.ProfilePicture)"
+                                             class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;" />
+                                    }
+                                    else
+                                    {
+                                        <img src="/images/default-profilbild.png" class="rounded-circle border" style="width: 40px; height: 40px; object-fit: cover;" />
+                                    }
+                                </a>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <span class="fw-bold me-2">@comment.CreatedByName</span>
+                                        <small class="text-muted">@comment.Created.ToString("yyyy-MM-dd HH:mm")</small>
+                                        @if (comment.IsEdited)
+                                        {
+                                            <small class="text-muted fst-italic ms-1">(Edited)</small>
+                                        }
+                                    </div>
+
+                                    @if (comment.CreatedById == currentUserId || User.IsInRole("Admin"))
+                                    {
+                                        <div class="dropdown">
+                                            <button class="btn btn-link text-muted p-0 text-decoration-none" type="button" data-bs-toggle="dropdown">
+                                                <i class="bi bi-three-dots"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end border-0 shadow">
+                                                @if (comment.CreatedById == currentUserId)
+                                                {
+                                                    <li><a class="dropdown-item" asp-action="EditComment" asp-route-id="@comment.CommentId">Edit</a></li>
+                                                }
+                                                <li>
+                                                    <form asp-action="DeleteComment" method="post" onsubmit="return confirm('Delete comment?');">
+                                                        <input type="hidden" name="id" value="@comment.CommentId"/>
+                                                        <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                                    </form>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    }
+                                </div>
+
+                                <p class="mt-2 mb-2 text-break">@comment.Content</p>
+
+                                @if (comment.Image != null)
+                                {
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(comment.Image)" 
+                                         class="img-fluid rounded mb-2 mt-2" style="max-height: 200px;" />
+                                }
+
+                                <div class="d-flex align-items-center mt-3 pt-2 border-top">
+                                    @if (User.Identity.IsAuthenticated)
+                                    {
+                                        <form asp-action="LikeComment" method="post" class="d-flex align-items-center">
+                                            <input type="hidden" name="commentId" value="@comment.CommentId"/>
+                                            
+                                            <button type="submit" class="btn btn-sm border-0 p-0 d-flex align-items-center gap-2 @(comment.HasLiked ? "text-primary fw-bold" : "text-muted")">
+                                                @if (comment.HasLiked)
+                                                {
+                                                    <i class="bi bi-hand-thumbs-up-fill fs-5"></i> <span>Liked</span>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-hand-thumbs-up fs-5"></i> <span>Like</span>
+                                                }
+                                            </button>
+                                            
+                                            @if (comment.Likes > 0)
+                                            {
+                                                <span class="ms-2 badge bg-light text-dark border rounded-pill">
+                                                    @comment.Likes @((comment.Likes == 1) ? "like" : "likes")
+                                                </span>
+                                            }
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        if (comment.Likes > 0)
+                                        {
+                                            <div class="text-muted small">
+                                                <i class="bi bi-hand-thumbs-up-fill text-secondary"></i> @comment.Likes likes
+                                            </div>
+                                        }
+                                        
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center p-5 text-muted bg-light rounded-3 mb-4">
+                    <i class="bi bi-chat-left-text fs-3 mb-3 d-block"></i>
+                    No comments yet. Be the first to join the discussion!
+                </div>
+            }
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="card shadow-sm border-0">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">Leave a comment</h5>
+                        <form asp-action="AddComment" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="ThreadId" value="@Model.ThreadId"/>
+                            
+                            <div class="mb-3">
+                                <textarea name="Content" class="form-control bg-light border-0" rows="3" placeholder="Write your thoughts here..."></textarea>
+                                <span asp-validation-for="NewComment.Content" class="text-danger small"></span>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <label class="btn btn-outline-secondary btn-sm" for="commentImage">
+                                        <i class="bi bi-image"></i> Add Image
+                                    </label>
+                                    <input type="file" name="ImageFile" id="commentImage" class="d-none" onchange="this.nextElementSibling.textContent = this.files[0].name" />
+                                    <span class="ms-2 small text-muted"></span>
+                                </div>
+
+                                <button type="submit" class="btn btn-dark px-4 rounded-pill">Post Comment</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-secondary text-center">
+                    <a asp-area="Identity" asp-page="/Account/Login" class="alert-link">Log in</a> to post a comment.
+                </div>
+            }
+        </div>
+    </div>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
