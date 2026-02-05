@@ -1,5 +1,18 @@
 @model WhiskeySour.Web.ViewModels.SearchViewModel
-
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show text-center" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i> @TempData["Success"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 <h2 class="d-flex justify-content-center my-4">Search results for "@Model.Query"</h2>
 <div class="d-flex justify-content-center">
     @if (!Model.Products.Any() && !Model.Users.Any())
