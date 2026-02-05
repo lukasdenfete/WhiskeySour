@@ -1,25 +1,79 @@
 @model WhiskeySour.Web.ViewModels.ProfileViewModel
 
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "My Profile";
 }
-<div class="d-flex justify-content-center">
-    @if (Model.ProfilePicture != null)
-    {
-        <img src="data:image/png;base64,@Convert.ToBase64String(Model.ProfilePicture)"
-             alt="Profile picture" class="rounded-circle" style="height:150px;width:150px;object-fit:cover;"/>
-    }
-    else
-    {
-        <img src="/images/default-profilbild.png" alt="Profile picture" class="rounded-circle" style="height:150px;width:150px;object-fit:cover;"/>
-    }
-</div>
-<h2 class="d-flex justify-content-center">@Model.FirstName @Model.LastName</h2>
 
-<h4>Basic information</h4>
-<div class="card p-4">
-    <p><strong>Email:</strong> @Model.Email</p>
-    <p><strong>First name:</strong> @Model.FirstName</p>
-    <p><strong>Last name:</strong> @Model.LastName</p>
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            
+            <div class="text-center mb-4">
+                <h1 class="h3 mb-3 fw-normal">@ViewData["Title"]</h1>
+            </div>
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4 p-md-5 text-center">
+                    
+                    <div class="mb-4 position-relative d-inline-block">
+                        @if (Model.ProfilePicture != null)
+                        {
+                            <img src="data:image/png;base64,@Convert.ToBase64String(Model.ProfilePicture)"
+                                 alt="Profile picture" 
+                                 class="rounded-circle border border-4 border-light shadow-sm" 
+                                 style="height: 150px; width: 150px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto border border-4 border-light shadow-sm" 
+                                 style="height: 150px; width: 150px;">
+                                <i class="bi bi-person-circle text-secondary" style="font-size: 5rem;"></i>
+                            </div>
+                        }
+                        
+                        <a asp-controller="Profile" asp-action="Edit" class="position-absolute bottom-0 end-0 bg-white rounded-circle shadow-sm p-2 text-dark" title="Change picture">
+                            <i class="bi bi-camera-fill"></i>
+                        </a>
+                    </div>
+
+                    <h2 class="h4 fw-bold mb-1">@Model.FirstName @Model.LastName</h2>
+                    <p class="text-muted mb-4">@Model.Email</p>
+
+                    <div class="border-top pt-4 text-start">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="h6 text-uppercase text-muted mb-0 small fw-bold tracking-wide">Account Details</h5>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">First Name</div>
+                            <div class="col-sm-8 fw-medium">@Model.FirstName</div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Last Name</div>
+                            <div class="col-sm-8 fw-medium">@Model.LastName</div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-sm-4 text-muted">Email</div>
+                            <div class="col-sm-8 fw-medium">@Model.Email</div>
+                        </div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <a asp-controller="Profile" asp-action="Edit" class="btn btn-dark">
+                            <i class="bi bi-pencil-square me-2"></i>Edit Profile
+                        </a>
+                        
+                        @* <a asp-area="Identity" asp-page="/Account/Manage/ChangePassword" class="btn btn-outline-secondary">
+                            <i class="bi bi-key me-2"></i>Change Password
+                        </a>
+                        *@
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>
-<a asp-controller="Profile" asp-action="Edit" class="btn btn-secondary mt-3">Edit Profile</a>

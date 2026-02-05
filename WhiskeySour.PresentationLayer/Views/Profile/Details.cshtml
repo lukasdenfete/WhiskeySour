@@ -2,49 +2,91 @@
 @model WhiskeySour.Web.ViewModels.ProfileViewModel
 
 @{
-    ViewData["Title"] = @Model.FirstName + " " + @Model.LastName;
+    ViewData["Title"] = $"{Model.FirstName} {Model.LastName}";
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var isOwnProfile = User.Identity.IsAuthenticated && currentUserId == Model.UserId;
 }
-<div class="d-flex justify-content-center">
-    @if (Model.ProfilePicture != null)
-    {
-        <img src="data:image/png;base64,@Convert.ToBase64String(Model.ProfilePicture)"
-             alt="Profile picture" class="rounded-circle" style="height:150px;width:150px;object-fit:cover;"/>
-    }
-    else
-    {
-        <img src="/images/default-profilbild.png" alt="Profile picture" class="rounded-circle" style="height:150px;width:150px;object-fit:cover;"/>
-    }
-</div>
-<h2 class="d-flex justify-content-center">@Model.FirstName @Model.LastName</h2>
 
-<h4>Basic information</h4>
-<div class="card p-4">
-    <p><strong>Email:</strong> @Model.Email</p>
-    <p><strong>First name:</strong> @Model.FirstName</p>
-    <p><strong>Last name:</strong> @Model.LastName</p>
-</div>
-<div class="d-flex align-items-center">
-<a class="btn btn-dark me-2"
-   asp-controller="Message"
-   asp-action="Conversation"
-   asp-route-id="@Model.UserId">
-    Send Message
-</a>
-@if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.NameIdentifier) != Model.UserId)
-{
-    if (Model.IsFollowedByCurrentUser)
-    {
-        <form asp-controller="Follow" asp-action="Unfollow" method="post">
-            <input type="hidden" name="userId" value="@Model.UserId"/>
-            <button type="submit" class="btn btn-outline-dark">Unfollow</button>
-        </form>
-    }
-    else
-    {
-        <form asp-controller="Follow" asp-action="Follow" method="post">
-            <input type="hidden" name="userId" value="@Model.UserId"/>
-            <button type="submit" class="btn btn-dark">Follow</button>
-        </form>
-    }
-}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-6">
+            
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5 text-center">
+                    
+                    <div class="mb-3 position-relative d-inline-block">
+                        @if (Model.ProfilePicture != null)
+                        {
+                            <img src="data:image/png;base64,@Convert.ToBase64String(Model.ProfilePicture)"
+                                 alt="@Model.FirstName" 
+                                 class="rounded-circle border border-4 border-light shadow-sm" 
+                                 style="height: 150px; width: 150px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center mx-auto border border-4 border-light shadow-sm" 
+                                 style="height: 150px; width: 150px;">
+                                <i class="bi bi-person text-secondary display-1"></i>
+                            </div>
+                        }
+                    </div>
+
+                    <h1 class="h3 fw-bold mb-1">@Model.FirstName @Model.LastName</h1>
+                    <p class="text-muted mb-4">@Model.Email</p>
+
+                    @if (User.Identity.IsAuthenticated && !isOwnProfile)
+                    {
+                        <div class="d-flex justify-content-center gap-2 mb-4">
+                            <a class="btn btn-dark px-4"
+                               asp-controller="Message"
+                               asp-action="Conversation"
+                               asp-route-id="@Model.UserId">
+                                <i class="bi bi-chat-dots me-2"></i>Message
+                            </a>
+
+                            @if (Model.IsFollowedByCurrentUser)
+                            {
+                                <form asp-controller="Follow" asp-action="Unfollow" method="post">
+                                    <input type="hidden" name="userId" value="@Model.UserId"/>
+                                    <button type="submit" class="btn btn-outline-danger px-4">
+                                        <i class="bi bi-person-dash me-2"></i>Unfollow
+                                    </button>
+                                </form>
+                            }
+                            else
+                            {
+                                <form asp-controller="Follow" asp-action="Follow" method="post">
+                                    <input type="hidden" name="userId" value="@Model.UserId"/>
+                                    <button type="submit" class="btn btn-outline-dark px-4">
+                                        <i class="bi bi-person-plus me-2"></i>Follow
+                                    </button>
+                                </form>
+                            }
+                        </div>
+                    }
+
+                    <div class="border-top pt-4 text-start">
+                        <h5 class="h6 text-uppercase text-muted mb-3 small fw-bold tracking-wide">About</h5>
+                        
+                        <div class="row mb-2">
+                            <div class="col-4 text-muted">First Name</div>
+                            <div class="col-8 fw-medium">@Model.FirstName</div>
+                        </div>
+                        
+                        <div class="row mb-2">
+                            <div class="col-4 text-muted">Last Name</div>
+                            <div class="col-8 fw-medium">@Model.LastName</div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-4 text-muted">Email</div>
+                            <div class="col-8 fw-medium">@Model.Email</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
 </div>

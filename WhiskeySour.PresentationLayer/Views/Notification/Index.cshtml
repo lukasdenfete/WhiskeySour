@@ -34,13 +34,12 @@
                                 // Bestäm ikon och färg baserat på typ
                                 string iconClass = notification.Type switch
                                 {
-                                    NotificationType.NewComment => "bi-chat-left-text-fill text-info",
-                                    NotificationType.NewFollower => "bi-person-plus-fill text-success",
-                                    NotificationType.NewMessage => "bi-envelope-fill text-warning",
-                                    _ => "bi-card-heading text-primary" // Default (Thread)
+                                    NotificationType.NewComment => "bi-chat-left-text-fill text-dark",
+                                    NotificationType.NewFollower => "bi-person-plus-fill text-dark",
+                                    NotificationType.NewMessage => "bi-envelope-fill text-dark",
+                                    _ => "bi-card-heading text-primary"
                                 };
 
-                                // Olästa notiser får en svagt blå bakgrund istället för röd border
                                 string unreadClass = !notification.IsRead ? "bg-body-tertiary fw-semibold" : "bg-white";
                                 
                                 <a asp-controller="Notification" asp-action="MarkAsRead" asp-route-id="@notification.Id" 
