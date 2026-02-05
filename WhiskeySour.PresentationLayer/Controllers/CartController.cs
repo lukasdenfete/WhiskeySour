@@ -91,10 +91,30 @@ public class CartController : Controller
     [HttpPost]
     public async Task<IActionResult> ChangeQuantity(int itemId, int change)
     {
-        var item = await _context.CartItems.FindAsync(itemId);
+        var item = await _context.CartItems.Include
+            (i => i.Product)
+            .FirstOrDefaultAsync(i => i.Id == itemId);
+        
         if (item != null)
         {
-            item.Quantity += change;
+            var newQuantity = item.Quantity + change;
+            if (change > 0)
+            {
+                //Kolla om nya antalet överskrider lagersaldot
+                if (newQuantity <= item.Product.Quantity)
+                {
+                    item.Quantity = newQuantity;
+                }
+                else
+                {
+                    TempData["Error"] = "No more products in stock.";
+                }
+            }
+            else
+            {
+                item.Quantity = newQuantity;
+            }
+
             if (item.Quantity <= 0)
             {
                 _context.CartItems.Remove(item);

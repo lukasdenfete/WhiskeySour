@@ -29,12 +29,12 @@
 
                             <div class="col-12">
                                 <label for="address" class="form-label">Address</label>
-                                <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+                                <input type="text" class="form-control" id="address" name="address" placeholder="Big Street 36" required>
                             </div>
 
                             <div class="col-md-5">
                                 <label for="country" class="form-label">Country</label>
-                                <select class="form-select" id="country" required>
+                                <select class="form-select" id="country" name="country" required>
                                     <option value="">Choose...</option>
                                     <option>Andorra</option>
                                     <option>Botswana</option>
@@ -45,7 +45,7 @@
 
                             <div class="col-md-4">
                                 <label for="city" class="form-label">City</label>
-                                <input type="text" class="form-control" id="city" required>
+                                <input type="text" class="form-control" id="city" name="city" required>
                             </div>
                         </div>
 
@@ -54,16 +54,49 @@
                         <h4 class="mb-3">Payment</h4>
                         <div class="my-3">
                             <div class="form-check">
-                                <input id="credit" name="paymentMethod" type="radio" class="form-check-input" checked required>
+                                <input id="credit" name="paymentMethod" type="radio" class="form-check-input" value="credit" checked required onchange="togglePaymentFields()">
                                 <label class="form-check-label" for="credit">Credit card</label>
                             </div>
                             <div class="form-check">
-                                <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" required>
+                                <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" value="paypal" required onchange="togglePaymentFields()">
                                 <label class="form-check-label" for="paypal">PayPal</label>
                             </div>
                             <div class="form-check">
-                                <input id="swish" name="paymentMethod" type="radio" class="form-check-input" required>
+                                <input id="swish" name="paymentMethod" type="radio" class="form-check-input" value="swish" required onchange="togglePaymentFields()">
                                 <label class="form-check-label" for="swish">Swish</label>
+                            </div>
+                        </div>
+                        <div id="payment-credit" class="payment-section">
+                            <div class="row gy-3">
+                                <div class="col-md-6">
+                                    <label for="cc-name" class="form-label">Name on card</label>
+                                    <input type="text" class="form-control" id="cc-name" >
+                                    <small class="text-muted">Full name displayed on card</small>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="cc-number" class="form-label">Credit card number</label>
+                                    <input type="text" class="form-control" id="cc-number" placeholder="1234 5678 1234 5678" >
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="cc-expiration" class="form-label">Expiration date</label>
+                                    <input type="date" class="form-control" id="cc-expiration" >
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="cc-cvv" class="form-label">CVV</label>
+                                    <input type="text" class="form-control" id="cc-cvv" placeholder="XXX" >
+                                </div>
+                            </div>
+                        </div>
+                        <div id="payment-paypal" class="payment-section d-none">
+                            <div class="alert alert-info">
+                                You will be redirected to PayPal to complete your payment securely.
+                            </div>
+                        </div>
+                        <div id="payment-swish" class="payment-section d-none">
+                            <div class="col-md-6">
+                                <label for="swish-number" class="form-label">Swish Number</label>
+                                <input type="tel" class="form-control" id="swish-number" placeholder="07x-xxxxxxx">
+                                <small class="text-muted">Enter the mobile number connected to Swish</small>
                             </div>
                         </div>
                     </form>
@@ -94,13 +127,13 @@
                         </li>
                     </ul>
 
-                    <button type="submit" form="checkout-form" class="btn btn-primary w-100 btn-lg">
+                    <button type="submit" form="checkout-form" class="btn btn-dark w-100 btn-lg">
                         Place Order
                     </button>
                     
                     <div class="text-center mt-2">
                         <a asp-controller="Cart" asp-action="Index" class="text-decoration-none small text-muted">
-                             Back to cart
+                            Back to cart
                         </a>
                     </div>
                 </div>
@@ -108,3 +141,31 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    //Visa olika fält beroende på betalsätt
+    function togglePaymentFields() {
+        //Hämta radiobutton med name=paymentMethod
+        var radios = document.getElementsByName('paymentMethod');
+        var selectedValue;
+        
+        //Hämta vilken knapp som är vald
+        for (var i = 0; i < radios.length; i++) {
+            if(radios[i].checked){
+                selectedValue = radios[i].value;
+                break;
+            }
+        }
+        //Dölj alla från början
+        document.getElementById('payment-credit').classList.add('d-none');
+        document.getElementById('payment-swish').classList.add('d-none');
+        document.getElementById('payment-paypal').classList.add('d-none');
+        
+        //tar bort d-none på den som är vald
+        var selectedSection = document.getElementById('payment-' + selectedValue);
+        if(selectedSection){
+            selectedSection.classList.remove('d-none');
+        }
+    }
+</script>

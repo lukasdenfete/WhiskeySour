@@ -3,6 +3,13 @@
 @{
     ViewData["Title"] = "Shopping Cart";
 }
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-warning alert-dismissible" role="alert">
+        @TempData["Error"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <div class="container my-5">
     <h2 class="mb-4">Your shopping cart</h2>
@@ -34,7 +41,9 @@
                                 {
                                     <tr>
                                         <td class="align-middle">
+                                            <a asp-controller="Product" asp-action="Details" asp-route-id="@item.Product.ProductId" class="text-decoration-none text-reset">
                                             <strong>@item.Product.Name</strong>
+                                            </a>
                                             </td>
                                         <td class="align-middle text-center">
                                             <div class="d-flex justify-content-center align-items-center gap-2">
@@ -89,7 +98,7 @@
                         </div>
                         <hr />
                         <div class="d-grid gap-2">
-                                <a asp-controller="Cart" asp-action="Checkout" class="btn btn-primary btn-lg">
+                                <a asp-controller="Cart" asp-action="Checkout" class="btn btn-dark btn-lg">
                                     Continue to checkout
                                 </a>
                             <a asp-controller="Product" asp-action="Index" class="btn btn-outline-secondary">
