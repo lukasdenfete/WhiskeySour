@@ -39,7 +39,7 @@
 
                 <form asp-controller="Search" asp-action="Search" method="get" class="d-flex mx-lg-4 my-2 my-lg-0 flex-grow-1" style="max-width: 500px;">
                     <div class="input-group">
-                        <input name="searchString" type="search" class="form-control" placeholder="Search products..." aria-label="Search" />
+                        <input name="searchString" type="search" class="form-control" placeholder="Search..." aria-label="Search" />
                         @await Component.InvokeAsync("CategoryDropdown")
                         <button type="submit" class="btn btn-secondary">
                             <i class="bi bi-search"></i>
