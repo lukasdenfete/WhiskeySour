@@ -4,28 +4,67 @@
 @{
     ViewData["Title"] = "Messages";
 }
-<h2>Conversations</h2>
 
-@if (!Model.Any())
-{
-    <p>You have no conversations yet.</p>
-}
-else
-{
-    <ul class="list-group">
-        @foreach (var msg in Model)
-        {
-            var partnerId = msg.SenderId == User.FindFirst(ClaimTypes.NameIdentifier).Value
-                ? msg.ReceiverId
-                : msg.SenderId;
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
             
-            <a class="list-group-item list-group-item-action d-block mb-2" asp-controller="Message" 
-               asp-action="Conversation" asp-route-id="@partnerId">
-                <div>
-                    <strong>@ViewBag.Partners[partnerId]: </strong>
-                    <small>@msg.Content</small>
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-white border-0 pt-4 pb-2 px-4">
+                    <h1 class="h3 mb-0 fw-normal">@ViewData["Title"]</h1>
+                    <p class="text-muted small">Your recent conversations</p>
                 </div>
-            </a>
-        }
-    </ul>
-}
+
+                <div class="card-body p-0">
+                    @if (!Model.Any())
+                    {
+                        <div class="text-center py-5">
+                            <i class="bi bi-chat-square-dots text-muted display-4 mb-3"></i>
+                            <p class="text-muted">You have no conversations yet.</p>
+                            <a asp-controller="Forum" asp-action="Index" class="btn btn-sm btn-outline-dark">Go to Forum to find friends</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="list-group list-group-flush">
+                            @foreach (var msg in Model)
+                            {
+                                var partnerId = msg.SenderId == User.FindFirst(ClaimTypes.NameIdentifier).Value
+                                    ? msg.ReceiverId
+                                    : msg.SenderId;
+                                
+                                var partnerName = ViewBag.Partners != null && ViewBag.Partners.ContainsKey(partnerId) 
+                                    ? ViewBag.Partners[partnerId] 
+                                    : "Unknown User";
+
+                                <a asp-controller="Message" asp-action="Conversation" asp-route-id="@partnerId" 
+                                   class="list-group-item list-group-item-action p-3 d-flex align-items-center gap-3 border-bottom-0">
+                                    
+                                    <div class="flex-shrink-0">
+                                        <div class="rounded-circle bg-light d-flex justify-content-center align-items-center" style="width: 48px; height: 48px;">
+                                            <i class="bi bi-person-fill text-secondary fs-4"></i>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex-grow-1 min-width-0">
+                                        <div class="d-flex justify-content-between align-items-baseline mb-1">
+                                            <h6 class="mb-0 text-dark fw-bold">@partnerName</h6>
+                                            </div>
+                                        <p class="mb-0 text-muted small text-truncate">
+                                            @msg.Content
+                                        </p>
+                                    </div>
+                                    
+                                    <div class="text-muted">
+                                        <i class="bi bi-chevron-right small"></i>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
