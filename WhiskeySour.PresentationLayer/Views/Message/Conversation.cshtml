@@ -25,6 +25,24 @@
                 <img src="@imgSrc" alt="profile picture" class="rounded-circle" style="width: 32px; height: 32px;"/>
             }
             <strong>
+<<<<<<< Updated upstream
+=======
+                @if (message.IsMine)
+                {
+                    <span>Me</span>
+                }
+                else
+                {
+                    <a asp-controller="Profile" asp-action="Details" asp-route-id="@message.SenderId" class="text-decoration-none text-dark">
+                        @message.SenderName
+                    </a>
+                }
+            </strong>
+            : @message.Content
+            
+            <br/>
+            <small class="text-muted">@message.SentAt.ToString("yyyy-MM-dd HH:mm")
+>>>>>>> Stashed changes
                 @if (message.IsMine)
                 {
                     <span>Me</span>
