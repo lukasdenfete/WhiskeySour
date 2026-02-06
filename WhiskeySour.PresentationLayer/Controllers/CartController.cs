@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using WhiskeySour.DataLayer;
+using WhiskeySour.Web.ViewModels;
 
 
 namespace WhiskeySour.Controllers;
@@ -26,18 +27,19 @@ public class CartController : Controller
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var cart = await GetOrCreateCartAsync(userId);
-        var currentUser = await _context.Users.FindAsync(userId);
         if (!cart.Items.Any())
         {
             return RedirectToAction("Index");
         }
-
-        if (currentUser != null)
+        var currentUser = await _context.Users.FindAsync(userId);
+        var viewModel = new CheckoutViewModel
         {
-            ViewBag.FirstName = currentUser.FirstName;
-            ViewBag.LastName = currentUser.LastName;
-        }
-        return View(cart);
+            Cart = cart, 
+            FirstName = currentUser?.FirstName,
+            LastName = currentUser?.LastName,
+        };
+
+        return View(viewModel);
     }
     [HttpPost]
     public async Task<IActionResult> Add(int productId, int quantity = 1)

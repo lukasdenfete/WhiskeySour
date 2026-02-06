@@ -16,51 +16,62 @@ public class OrderController : Controller
         _context = context;
     }
 
-    [HttpPost]
-    public async Task<IActionResult> PlaceOrder(string firstName, string lastName, string address,  string city, string country)
+    // Glöm inte: using WhiskeySour.Web.ViewModels;
+
+[HttpPost]
+public async Task<IActionResult> PlaceOrder(CheckoutViewModel model)
+{
+    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var cart = await _context.Carts
+        .Include(c => c.Items)
+        .ThenInclude(i => i.Product)
+        .FirstOrDefaultAsync(c => c.UserId == userId);
+
+    model.Cart = cart;
+
+    if (cart == null || !cart.Items.Any())
     {
-        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        var cart = await _context.Carts
-            .Include(c => c.Items)
-            .ThenInclude(i => i.Product)
-            .FirstOrDefaultAsync(c => c.UserId == userId);
-
-        if (cart == null || !cart.Items.Any())
-        {
-            return RedirectToAction("Index", "Cart");
-        }
-
-        var order = new Order
-        {
-            UserId = userId,
-            OrderDate = DateTime.Now,
-            TotalPrice = cart.TotalPrice,
-            FirstName = firstName,
-            LastName = lastName,
-            Address = address,
-            City = city,
-            Country = country
-        };
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
-
-        foreach (var item in cart.Items)
-        {
-            var orderItem = new OrderItem
-            {
-                OrderId = order.Id,
-                ProductId = item.ProductId,
-                Quantity = item.Quantity,
-                Price = item.Product.Price //spara aktuellt pris
-            };
-            _context.OrderItems.Add(orderItem);
-            var product = item.Product;
-            product.Quantity -=  item.Quantity;
-        }
-        _context.CartItems.RemoveRange(cart.Items);
-        await _context.SaveChangesAsync();
-        return RedirectToAction("OrderConfirmation", new {id = order.Id});
+        return RedirectToAction("Index", "Cart");
     }
+    if (!ModelState.IsValid)
+    {
+        return View("../Cart/Checkout", model);
+    }
+    var order = new Order
+    {
+        UserId = userId,
+        OrderDate = DateTime.Now,
+        TotalPrice = cart.TotalPrice,
+        FirstName = model.FirstName,
+        LastName = model.LastName,
+        Address = model.Address,
+        City = model.City,
+        Country = model.Country
+    };
+    
+    _context.Orders.Add(order);
+    await _context.SaveChangesAsync();
+
+    foreach (var item in cart.Items)
+    {
+        var orderItem = new OrderItem
+        {
+            OrderId = order.Id,
+            ProductId = item.ProductId,
+            Quantity = item.Quantity,
+            Price = item.Product.Price
+        };
+        _context.OrderItems.Add(orderItem);
+        
+        var product = item.Product;
+        product.Quantity -= item.Quantity;
+    }
+    
+    _context.CartItems.RemoveRange(cart.Items);
+    await _context.SaveChangesAsync();
+
+    return RedirectToAction("OrderConfirmation", new {id = order.Id});
+}
 
     public async Task<IActionResult> OrderConfirmation(int id)
     {

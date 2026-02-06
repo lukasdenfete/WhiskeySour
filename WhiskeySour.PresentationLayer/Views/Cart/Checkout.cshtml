@@ -1,4 +1,4 @@
-@model WhiskeySour.DataLayer.Cart
+@model WhiskeySour.Web.ViewModels.CheckoutViewModel
 
 @{
     ViewData["Title"] = "Checkout";
@@ -18,34 +18,49 @@
                         
                         <div class="row g-3">
                             <div class="col-sm-6">
-                                <label for="firstName" class="form-label">First name</label>
-                                <input type="text" class="form-control" id="firstName" name="firstName" value="@ViewBag.FirstName"  required>
+                                <div class="form-floating">
+                                    <input asp-for="FirstName" class="form-control" placeholder="First Name" />
+                                    <label asp-for="FirstName">First name</label>
+                                    <span asp-validation-for="FirstName" class="text-danger small"></span>
+                                </div>
                             </div>
 
                             <div class="col-sm-6">
-                                <label for="lastName" class="form-label">Last name</label>
-                                <input type="text" class="form-control" id="lastName" name="lastName" value="@ViewBag.LastName" required>
+                                <div class="form-floating">
+                                    <input asp-for="LastName" class="form-control" placeholder="Last Name" />
+                                    <label asp-for="LastName">Last name</label>
+                                    <span asp-validation-for="LastName" class="text-danger small"></span>
+                                </div>
                             </div>
 
                             <div class="col-12">
-                                <label for="address" class="form-label">Address</label>
-                                <input type="text" class="form-control" id="address" name="address" placeholder="Big Street 36" required>
+                                <div class="form-floating">
+                                    <input asp-for="Address" class="form-control" placeholder="Address" />
+                                    <label asp-for="Address">Address</label>
+                                    <span asp-validation-for="Address" class="text-danger small"></span>
+                                </div>
                             </div>
 
                             <div class="col-md-5">
-                                <label for="country" class="form-label">Country</label>
-                                <select class="form-select" id="country" name="country" required>
-                                    <option value="">Choose...</option>
-                                    <option>Andorra</option>
-                                    <option>Botswana</option>
-                                    <option>El Salvador</option>
-                                    <option>Sweden</option>
-                                </select>
+                                <div class="form-floating">
+                                    <select asp-for="Country" class="form-select">
+                                        <option value="">Choose...</option>
+                                        <option value="Andorra">Andorra</option>
+                                        <option value="Botswana">Botswana</option>
+                                        <option value="El Salvador">El Salvador</option>
+                                        <option value="Sweden">Sweden</option>
+                                    </select>
+                                    <label asp-for="Country">Country</label>
+                                    <span asp-validation-for="Country" class="text-danger small"></span>
+                                </div>
                             </div>
 
                             <div class="col-md-4">
-                                <label for="city" class="form-label">City</label>
-                                <input type="text" class="form-control" id="city" name="city" required>
+                                <div class="form-floating">
+                                    <input asp-for="City" class="form-control" placeholder="City" />
+                                    <label asp-for="City">City</label>
+                                    <span asp-validation-for="City" class="text-danger small"></span>
+                                </div>
                             </div>
                         </div>
 
@@ -54,86 +69,101 @@
                         <h4 class="mb-3">Payment</h4>
                         <div class="my-3">
                             <div class="form-check">
-                                <input id="credit" name="paymentMethod" type="radio" class="form-check-input" value="credit" checked required onchange="togglePaymentFields()">
-                                <label class="form-check-label" for="credit">Credit card</label>
+                                <input asp-for="PaymentMethod" type="radio" class="form-check-input" value="credit" onchange="togglePaymentFields()" checked>
+                                <label class="form-check-label" for="PaymentMethod">Credit card</label>
                             </div>
                             <div class="form-check">
-                                <input id="paypal" name="paymentMethod" type="radio" class="form-check-input" value="paypal" required onchange="togglePaymentFields()">
-                                <label class="form-check-label" for="paypal">PayPal</label>
+                                <input asp-for="PaymentMethod" type="radio" class="form-check-input" value="paypal" onchange="togglePaymentFields()">
+                                <label class="form-check-label" for="PaymentMethod">PayPal</label>
                             </div>
                             <div class="form-check">
-                                <input id="swish" name="paymentMethod" type="radio" class="form-check-input" value="swish" required onchange="togglePaymentFields()">
-                                <label class="form-check-label" for="swish">Swish</label>
+                                <input asp-for="PaymentMethod" type="radio" class="form-check-input" value="swish" onchange="togglePaymentFields()">
+                                <label class="form-check-label" for="PaymentMethod">Swish</label>
                             </div>
                         </div>
+
                         <div id="payment-credit" class="payment-section">
                             <div class="row gy-3">
                                 <div class="col-md-6">
-                                    <label for="cc-name" class="form-label">Name on card</label>
-                                    <input type="text" class="form-control" id="cc-name" >
+                                    <label asp-for="CreditCardName" class="form-label">Name on card</label>
+                                    <input asp-for="CreditCardName" class="form-control" />
                                     <small class="text-muted">Full name displayed on card</small>
+                                    <span asp-validation-for="CreditCardName" class="text-danger d-block"></span>
                                 </div>
+        
                                 <div class="col-md-6">
-                                    <label for="cc-number" class="form-label">Credit card number</label>
-                                    <input type="text" class="form-control" id="cc-number" placeholder="1234 5678 1234 5678" >
+                                    <label asp-for="CreditCardNumber" class="form-label">Credit card number</label>
+                                    <input asp-for="CreditCardNumber" class="form-control" placeholder="1234567812345678" maxlength="16" />
+                                    <span asp-validation-for="CreditCardNumber" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="cc-expiration" class="form-label">Expiration date</label>
-                                    <input type="date" class="form-control" id="cc-expiration" >
+        
+                                <div class="col-md-3">
+                                    <label asp-for="CreditCardExpiration" class="form-label">Expiration</label>
+                                    <input asp-for="CreditCardExpiration" type="text" class="form-control" placeholder="MM/YY" maxlength="5" />
+                                    <span asp-validation-for="CreditCardExpiration" class="text-danger"></span>
                                 </div>
-                                <div class="col-md-6">
-                                    <label for="cc-cvv" class="form-label">CVV</label>
-                                    <input type="text" class="form-control" id="cc-cvv" placeholder="XXX" >
+        
+                                <div class="col-md-3">
+                                    <label asp-for="CreditCardCvv" class="form-label">CVV</label>
+                                    <input asp-for="CreditCardCvv" type="text" class="form-control" placeholder="123" maxlength="3" />
+                                    <span asp-validation-for="CreditCardCvv" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>
+
                         <div id="payment-paypal" class="payment-section d-none">
-                            <div class="alert alert-info">
-                                You will be redirected to PayPal to complete your payment securely.
+                            <div class="alert alert-info border-0 shadow-sm">
+                                <i class="bi bi-paypal me-2"></i>You will be redirected to PayPal to complete your payment securely.
                             </div>
                         </div>
+
                         <div id="payment-swish" class="payment-section d-none">
                             <div class="col-md-6">
-                                <label for="swish-number" class="form-label">Swish Number</label>
-                                <input type="tel" class="form-control" id="swish-number" placeholder="07x-xxxxxxx">
+                                <label asp-for="SwishNumber" class="form-label">Swish Number</label>
+                                <input asp-for="SwishNumber" class="form-control" placeholder="0701234567" disabled required />
                                 <small class="text-muted">Enter the mobile number connected to Swish</small>
+                                <span asp-validation-for="SwishNumber" class="text-danger d-block"></span>
                             </div>
                         </div>
+
                     </form>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card shadow-sm position-sticky" style="top: 2rem;">
-                <div class="card-header bg-light">
+            <div class="card shadow-sm position-sticky border-0" style="top: 2rem;">
+                <div class="card-header bg-light border-bottom-0">
                     <h5 class="mb-0">Order Summary</h5>
                 </div>
                 <div class="card-body">
                     <ul class="list-group list-group-flush mb-3">
-                        @foreach (var item in Model.Items)
+                        @if (Model.Cart?.Items != null)
                         {
-                            <li class="list-group-item d-flex justify-content-between lh-sm px-0">
-                                <div>
-                                    <h6 class="my-0">@item.Product.Name</h6>
-                                    <small class="text-muted">Quantity: @item.Quantity</small>
-                                </div>
-                                <span class="text-muted">@((item.Product.Price * item.Quantity).ToString("C"))</span>
+                            foreach (var item in Model.Cart.Items)
+                            {
+                                <li class="list-group-item d-flex justify-content-between lh-sm px-0">
+                                    <div>
+                                        <h6 class="my-0">@item.Product.Name</h6>
+                                        <small class="text-muted">Qty: @item.Quantity</small>
+                                    </div>
+                                    <span class="text-muted">@((item.Product.Price * item.Quantity).ToString("C"))</span>
+                                </li>
+                            }
+                            <li class="list-group-item d-flex justify-content-between px-0 fw-bold border-top mt-2 pt-3">
+                                <span>Total</span>
+                                <span>@Model.Cart.TotalPrice.ToString("C")</span>
                             </li>
                         }
-                        <li class="list-group-item d-flex justify-content-between px-0 fw-bold">
-                            <span>Total</span>
-                            <span>@Model.TotalPrice.ToString("C")</span>
-                        </li>
                     </ul>
 
                     <button type="submit" form="checkout-form" class="btn btn-dark w-100 btn-lg">
                         Place Order
                     </button>
                     
-                    <div class="text-center mt-2">
+                    <div class="text-center mt-3">
                         <a asp-controller="Cart" asp-action="Index" class="text-decoration-none small text-muted">
-                            Back to cart
+                            <i class="bi bi-arrow-left me-1"></i>Back to cart
                         </a>
                     </div>
                 </div>
@@ -142,30 +172,34 @@
     </div>
 </div>
 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            togglePaymentFields();
+        });
 
-<script>
-    //Visa olika fält beroende på betalsätt
-    function togglePaymentFields() {
-        //Hämta radiobutton med name=paymentMethod
-        var radios = document.getElementsByName('paymentMethod');
-        var selectedValue;
-        
-        //Hämta vilken knapp som är vald
-        for (var i = 0; i < radios.length; i++) {
-            if(radios[i].checked){
-                selectedValue = radios[i].value;
-                break;
-            }
+        function togglePaymentFields() {
+            const creditSection = document.getElementById('payment-credit');
+            const paypalSection = document.getElementById('payment-paypal');
+            const swishSection = document.getElementById('payment-swish');
+            const sections = [creditSection, paypalSection, swishSection];
+            const selectedMethod = document.querySelector('input[name="PaymentMethod"]:checked').value;
+
+            sections.forEach(section => {
+                if (section.id === 'payment-' + selectedMethod) {
+                    section.classList.remove('d-none');
+                    section.querySelectorAll('input').forEach(input => {
+                        input.disabled = false;
+                    });
+                } else {
+                    section.classList.add('d-none');
+                    section.querySelectorAll('input').forEach(input => {
+                        input.disabled = true;
+                    });
+                }
+            });
         }
-        //Dölj alla från början
-        document.getElementById('payment-credit').classList.add('d-none');
-        document.getElementById('payment-swish').classList.add('d-none');
-        document.getElementById('payment-paypal').classList.add('d-none');
-        
-        //tar bort d-none på den som är vald
-        var selectedSection = document.getElementById('payment-' + selectedValue);
-        if(selectedSection){
-            selectedSection.classList.remove('d-none');
-        }
-    }
-</script>
+    </script>
+}
