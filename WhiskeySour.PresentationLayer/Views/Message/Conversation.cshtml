@@ -4,11 +4,12 @@
 @model List<WhiskeySour.Web.ViewModels.MessageViewModel>
 
 @{
-    ViewData["Title"] = "Conversation";
     var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+    var partnerName = ViewBag.PartnerName as string ?? "Unknown";
+    ViewData["Title"] = $"Conversation with {partnerName}";
 }
 
-<h2>Conversation</h2>
+<h2>@ViewData["Title"]</h2>
 
 <div class="mb-3">
     @foreach (var message in Model)
@@ -20,7 +21,19 @@
                 var imgSrc = $"data:image/png;base64,{base64}";
                 <img src="@imgSrc" alt="profile picture" class="rounded-circle" style="width: 32px; height: 32px;"/>
             }
-            <strong>@(message.IsMine ? "Me" : message.SenderName)</strong>: @message.Content
+            <strong>
+                @if (message.IsMine)
+                {
+                    <span>Me</span>
+                }
+                else
+                {
+                    <a asp-controller="Profile" asp-action="Details" asp-route-id="@message.SenderId" class="text-decoration-none text-dark">
+                        @message.SenderName
+                    </a>
+                }
+            </strong>
+            : @message.Content
             <br/>
             <small class="text-muted">@message.SentAt.ToString("yyyy-MM-dd HH:mm")
                 @if (message.IsMine)
