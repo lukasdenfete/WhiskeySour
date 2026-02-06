@@ -53,16 +53,22 @@ public class MessageController : Controller
             .Include(m => m.Receiver)
             .OrderBy(m => m.SentAt)
             .ToListAsync();
+
+        var partner = await _userManager.FindByIdAsync(id);
+        if (partner == null) return NotFound();
+        ViewBag.PartnerName =  partner.FirstName + " " + partner.LastName;
         
         var unreadMessages = messages
             .Where(m => m.ReceiverId == user.Id && !m.IsRead)
             .ToList();
-        foreach (var message in unreadMessages)
+        if (unreadMessages.Any())
         {
-            message.IsRead = true;
+            foreach (var message in unreadMessages)
+            {
+                message.IsRead = true;
+            }
+            await _context.SaveChangesAsync();
         }
-
-        await _context.SaveChangesAsync();
 
         var mvm = messages.Select(m => new MessageViewModel
         {

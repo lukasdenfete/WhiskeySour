@@ -77,7 +77,51 @@
                     <a class="btn btn-dark" asp-area="Identity" asp-page="/Account/Login">Login</a>
                     </li>
 
+<<<<<<< Updated upstream
                 }
+=======
+                <ul class="navbar-nav ms-auto align-items-center gap-3">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link position-relative" asp-controller="Cart" asp-action="Index" title="Varukorg">
+                                <i class="bi bi-cart3 fs-3"></i>
+                            </a>
+                        </li>
+                        
+                        <li class="nav-item">
+                            @await Component.InvokeAsync("UnreadNotifications")
+                        </li>
+                        
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Message" asp-action="Index" title="Messages">
+                                <i class="bi bi-chat-dots fs-3"></i>
+                            </a>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @await Component.InvokeAsync("ProfilePicture")
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" asp-controller="Profile" asp-action="Index">My Profile</a></li>
+                                <li><a class="dropdown-item" asp-controller="Order" asp-action="Index">Orders</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                        <button type="submit" class="dropdown-item text-danger">Logout</button>
+                                    </form>
+                                </li>
+                            </ul> 
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="btn btn-outline-light btn-sm px-4" asp-area="Identity" asp-page="/Account/Login">Log in</a>
+                        </li>
+                    }
+>>>>>>> Stashed changes
                 </ul>
             </div>
         </div>
