@@ -67,6 +67,7 @@ public class NotificationController : Controller
             {
                 case NotificationType.NewComment:
                 case NotificationType.NewThreadFromFollowee:
+                case NotificationType.NewCommentLike:
                     return RedirectToAction("Details", "Forum", new { id = notification.ThreadId });
 
                 case NotificationType.NewMessage:

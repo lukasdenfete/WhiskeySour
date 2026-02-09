@@ -423,30 +423,70 @@ public class ForumController : Controller
         return RedirectToAction("Details", new { id = comment.ThreadId });
     }
 
-    [HttpPost]
-    [Authorize]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> LikeComment(int commentId)
+[HttpPost]
+[Authorize]
+[ValidateAntiForgeryToken]
+public async Task<IActionResult> LikeComment(int commentId)
+{
+    var user = await _userManager.GetUserAsync(User);
+    var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == commentId);
+    if (comment == null) return NotFound();
+
+    var existingLike = await _context.CommentLikes
+        .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == user.Id);
+
+    if (existingLike == null)
     {
-        var user = await _userManager.GetUserAsync(User);
-        var existingLike = await _context.CommentLikes
-            .FirstOrDefaultAsync(cl => cl.CommentId == commentId && cl.UserId == user.Id);
-
-        if (existingLike == null)
+        _context.CommentLikes.Add(new CommentLike
         {
-            _context.CommentLikes.Add(new CommentLike
+            CommentId = commentId,
+            UserId = user.Id
+        });
+
+        // skapa notis om det ej är ens egen kommentar
+        if (comment.CreatedById != user.Id)
+        {
+            var existingNotification = await _context.Notifications
+                .FirstOrDefaultAsync(n => n.Type == NotificationType.NewCommentLike 
+                                          && n.CommentId == commentId 
+                                          && n.FromUserId == user.Id);
+
+            if (existingNotification == null)
             {
-                CommentId = commentId,
-                UserId = user.Id
-            });
+                var notification = new Notification
+                {
+                    UserId = comment.CreatedById,
+                    FromUserId = user.Id,
+                    Type = NotificationType.NewCommentLike,
+                    CommentId = commentId,
+                    ThreadId = comment.ThreadId,
+                    isRead = false,
+                    CreatedAt = DateTime.Now
+                };
+                _context.Notifications.Add(notification);
+            }
         }
-        else
-        {
-            _context.CommentLikes.Remove(existingLike);
-        }
-        await _context.SaveChangesAsync();
-
-        var threadId = (await _context.Comments.FirstOrDefaultAsync(c => c.Id == commentId))!.ThreadId; // redirecta till rätt tråd
-        return RedirectToAction("Details", new { id = threadId });
     }
+    else
+    {
+        //unlike
+        _context.CommentLikes.Remove(existingLike);
+
+        // ta bort notis om man ångrar sig
+        if (comment.CreatedById != user.Id)
+        {
+            var notificationToRemove = await _context.Notifications
+                .FirstOrDefaultAsync(n => n.Type == NotificationType.NewCommentLike 
+                                          && n.CommentId == commentId 
+                                          && n.FromUserId == user.Id);
+            
+            if (notificationToRemove != null)
+            {
+                _context.Notifications.Remove(notificationToRemove);
+            }
+        }
+    }
+    await _context.SaveChangesAsync();
+    return RedirectToAction("Details", new { id = comment.ThreadId });
+}
 }

@@ -37,7 +37,8 @@
                                     NotificationType.NewComment => "bi-chat-left-text-fill text-dark",
                                     NotificationType.NewFollower => "bi-person-plus-fill text-dark",
                                     NotificationType.NewMessage => "bi-envelope-fill text-dark",
-                                    _ => "bi-card-heading text-primary"
+                                    NotificationType.NewCommentLike =>  "bi-heart-fill text-dark",
+                                    _ => "bi-card-heading text-dark"
                                 };
 
                                 string unreadClass = !notification.IsRead ? "bg-body-tertiary fw-semibold" : "bg-white";
@@ -72,6 +73,10 @@
                                             {
                                                 <span>New message from <strong>@notification.FromUserName</strong></span>
                                             }
+                                            else if (notification.Type == NotificationType.NewCommentLike)
+                                            {
+                                                <p><strong>@notification.FromUserName</strong> liked your comment.</p>
+                                            }
                                             else
                                             {
                                                 <span>New thread by <strong>@notification.FromUserName</strong></span>
@@ -79,7 +84,7 @@
                                         </p>
 
                                         <p class="mb-0 text-muted small text-truncate" style="max-width: 380px;">
-                                            @if (notification.Type == NotificationType.NewComment)
+                                            @if (notification.Type == NotificationType.NewComment || notification.Type == NotificationType.NewCommentLike)
                                             {
                                                 @: "@notification.CommentText"
                                             }
