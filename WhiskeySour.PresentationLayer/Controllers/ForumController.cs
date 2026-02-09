@@ -188,31 +188,41 @@ public class ForumController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteThread(int id)
     {
-        var thread = await _context.Threads
+        var user = await _userManager.GetUserAsync(User);
+        var isAdmin = User.IsInRole("Admin");
+        var thread = await _context.Threads.FindAsync(id);
+        /*var thread = await _context.Threads
             .Include(t => t.CreatedBy)
             .Include(t => t.Comments)
                 .ThenInclude(c => c.CommentLikes)
             .Include(t => t.Comments)
                 .ThenInclude(c => c.Notifications)
-            .FirstOrDefaultAsync(t => t.Id == id);
+            .FirstOrDefaultAsync(t => t.Id == id);*/
+        
         if (thread == null)
         {
             return NotFound();
         }
-        var user = await _userManager.GetUserAsync(User);
-        var isAdmin = User.IsInRole("Admin");
+        
         if (thread.CreatedById == user.Id || isAdmin)
         {
-            // Tar bort trådnotiser manuellt pga fk constraints och multiple cascade paths
-            var threadNotifications = _context.Notifications.Where(n => n.ThreadId == thread.Id);
-            _context.Notifications.RemoveRange(threadNotifications);
-
-            // Tar bort kommentarnotiser manuellt pga fk constraints och multiple cascade paths
-            foreach (var comment in thread.Comments)
-            {
-                var commentNotifications = _context.Notifications.Where(n => n.CommentId == comment.Id);
-                _context.Notifications.RemoveRange(commentNotifications);
-            }
+            //ta bort trådnotiser
+            await _context.Notifications
+                .Where(n => n.ThreadId == id)
+                .ExecuteDeleteAsync();
+            
+            //ta bort notiser för trådens kommentarer
+            await _context.Notifications
+                .Where(n => n.Comment != null && n.Comment.ThreadId == id)
+                .ExecuteDeleteAsync();
+            //ta bort likes på trådens kommentarer
+            await _context.CommentLikes
+                .Where(cl => cl.Comment.ThreadId == id)
+                .ExecuteDeleteAsync();
+            //ta bort kommentarerna
+            await _context.Comments
+                .Where(c => c.ThreadId == id)
+                .ExecuteDeleteAsync();
 
             _context.Threads.Remove(thread);
             await _context.SaveChangesAsync();
@@ -228,20 +238,26 @@ public class ForumController : Controller
     [HttpPost]
     public async Task<IActionResult> DeleteComment(int id)
     {
-        var comment = await _context.Comments
+        var user = await _userManager.GetUserAsync(User);
+        var isAdmin = User.IsInRole("Admin");
+        var comment = await _context.Comments.FirstOrDefaultAsync(c => c.Id == id);
+       /* var comment = await _context.Comments
             .Include(c => c.CreatedBy)
             .Include(c => c.CommentLikes)
             .Include(c => c.Notifications)
-            .FirstOrDefaultAsync(c => c.Id == id);
+            .FirstOrDefaultAsync(c => c.Id == id);*/
         
         if (comment == null)
         {
             return NotFound();
         }
-        var user = await _userManager.GetUserAsync(User);
-        var isAdmin = User.IsInRole("Admin");
+
         if (comment.CreatedById == user.Id || isAdmin)
         {
+            //tar bort notiser och likes
+            await _context.Notifications.Where(n => n.CommentId == id).ExecuteDeleteAsync();
+            await _context.CommentLikes.Where(cl => cl.CommentId == id).ExecuteDeleteAsync();
+            
             _context.Comments.Remove(comment);
             await _context.SaveChangesAsync();
             return RedirectToAction("Details", new { id = comment.ThreadId });
