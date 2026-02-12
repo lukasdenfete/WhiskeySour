@@ -31,7 +31,7 @@
                         <div class="list-group list-group-flush">
                             @foreach (var notification in Model)
                             {
-                                // Bestäm ikon och färg baserat på typ
+                                // olika ikoner beroende på typ
                                 string iconClass = notification.Type switch
                                 {
                                     NotificationType.NewComment => "bi-chat-left-text-fill text-dark",
